@@ -5,6 +5,7 @@ import os
 from settings import *
 from classes_world import *
 from classes_vehicles import *
+from classes_interface import *
 from functions import *
 
 def run():
@@ -14,7 +15,7 @@ def run():
     DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES = load_from_file()
 
     # make test TRAINS
-    DICT_WITH_CARRIAGES = make_test_trains()
+    DICT_WITH_CARRIAGES, DICT_WITH_ENGINES = make_test_trains()
 
     # initialize the pygame
     pygame.init()
@@ -98,6 +99,10 @@ def run():
             DICT_WITH_CARRIAGES[carriage].accelerate()
             DICT_WITH_CARRIAGES[carriage].move()
             DICT_WITH_CARRIAGES[carriage].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+
+        # draw interface
+        for bar in DICT_WITH_ENGINES:
+            DICT_WITH_ENGINES[bar].draw(WIN, DICT_WITH_CARRIAGES[DICT_WITH_ENGINES[bar].engine_id])
 
         # flip the screen
         pygame.display.update()

@@ -17,9 +17,9 @@ class Vehicle:
         # self.type
 
     def draw(self, win, offset_x, offset_y, scale):
-        if self.state == "stop": color = (0,255,0) # green
-        elif self.state == "move": color = YELLOW #(255,255,0) # yellow
-        else: color = (255,0,0) # red
+        if self.state == "stop": color = GREEN
+        elif self.state == "move": color = YELLOW
+        else: color = RED
         pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 4*scale, self.r)
 
     def accelerate(self):

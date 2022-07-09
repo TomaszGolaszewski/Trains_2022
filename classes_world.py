@@ -20,9 +20,9 @@ class Segment:
         self.state = "active"
 
     def draw(self, win, offset_x, offset_y, scale):
-        if self.state == "active": color = (255,255,255)
-        elif self.state == "passive": color = (0,0,255)
-        else: color = (255,0,0)
+        if self.state == "active": color = WHITE
+        elif self.state == "passive": color = BLUE
+        else: color = RED
         pygame.draw.line(win, color, move_point(self.point1, offset_x, offset_y, scale), move_point(self.point2, offset_x, offset_y, scale), 1)
 
 

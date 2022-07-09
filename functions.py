@@ -2,6 +2,7 @@ import os
 
 from classes_world import *
 from classes_vehicles import *
+from classes_interface import *
 from settings import *
 
 def load_from_file():
@@ -76,14 +77,18 @@ def load_from_file():
 def make_test_trains():
     id = 0
     dict = {}
+    dict_with_engines = {}
 
     for i in range(5):
         dict[id] = Engine(id, [230, 10+10*i], 0, 0)
+        dict_with_engines[id] = Engine_bar(id, [1160,29*i])
         id += 1
 
     for i in range(5):
         for j in range(9):
             dict[id] = Carriage(id, [30+20*j, 10+10*i], 0, 0)
             id += 1
+
     dict[0].v_target = 5
-    return dict
+    dict[0].state = "move"
+    return dict, dict_with_engines
