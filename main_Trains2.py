@@ -15,7 +15,7 @@ def run():
     DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES = load_from_file()
 
     # make test TRAINS
-    DICT_WITH_CARRIAGES, DICT_WITH_ENGINES = make_test_trains()
+    DICT_WITH_CARRIAGES, LIST_WITH_ENGINES = make_test_trains(DICT_WITH_SEGMENTS)
 
     # initialize the pygame
     pygame.init()
@@ -42,6 +42,8 @@ def run():
             # mouse
             if event.type == pygame.MOUSEBUTTONUP:
                 # 1 - left click
+                if event.button == 1:
+                    print(str(which_segment(DICT_WITH_SEGMENTS, move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE), 5)))
                 # 2 - middle click
                 # 3 - right click
                 # 4 - scroll up
@@ -101,8 +103,8 @@ def run():
             DICT_WITH_CARRIAGES[carriage].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface
-        for bar in DICT_WITH_ENGINES:
-            DICT_WITH_ENGINES[bar].draw(WIN, DICT_WITH_CARRIAGES[DICT_WITH_ENGINES[bar].engine_id])
+        for bar in LIST_WITH_ENGINES:
+            DICT_WITH_CARRIAGES[bar].draw_bar(WIN, (1150,29*bar))
 
         # flip the screen
         pygame.display.update()

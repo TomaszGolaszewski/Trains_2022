@@ -4,6 +4,7 @@ from classes_world import *
 from classes_vehicles import *
 from classes_interface import *
 from settings import *
+from functions_math import *
 
 def load_from_file():
 # function that load data from file in Trains_2015 standard and convert to an object-oriented structure
@@ -74,21 +75,26 @@ def load_from_file():
     #     print("Map error")
     #     quit()
 
-def make_test_trains():
+def make_test_trains(dict_with_segments):
     id = 0
     dict = {}
-    dict_with_engines = {}
+    list_with_engines = []
 
     for i in range(5):
-        dict[id] = Engine(id, [230, 10+10*i], 0, 0)
-        dict_with_engines[id] = Engine_bar(id, [1160,29*i])
+        dict[id] = Engine(id, [230, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        list_with_engines.append(id)
         id += 1
 
     for i in range(5):
         for j in range(9):
-            dict[id] = Carriage(id, [30+20*j, 10+10*i], 0, 0)
+            dict[id] = Carriage(id, [30+20*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
             id += 1
 
-    dict[0].v_target = 5
-    dict[0].state = "move"
-    return dict, dict_with_engines
+    dict[1].v_target = 5
+    dict[1].state = "move"
+    return dict, list_with_engines
+
+def which_segment(dict_with_segments, point, offset):
+    for segment_id in dict_with_segments:
+        if dist_to_segment(dict_with_segments[segment_id], point) < offset:
+            return segment_id
