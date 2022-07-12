@@ -82,6 +82,7 @@ def make_test_trains(dict_with_segments):
 
     for i in range(5):
         dict[id] = Engine(id, [230, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        dict[id].set_new_bar_orgin((1150,29*i))
         list_with_engines.append(id)
         id += 1
 
@@ -90,8 +91,6 @@ def make_test_trains(dict_with_segments):
             dict[id] = Carriage(id, [30+20*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
             id += 1
 
-    dict[1].v_target = 5
-    dict[1].state = "move"
     return dict, list_with_engines
 
 def which_segment(dict_with_segments, point, offset):

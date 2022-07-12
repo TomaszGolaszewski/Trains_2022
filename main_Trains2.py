@@ -43,7 +43,10 @@ def run():
             if event.type == pygame.MOUSEBUTTONUP:
                 # 1 - left click
                 if event.button == 1:
-                    print(str(which_segment(DICT_WITH_SEGMENTS, move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE), 5)))
+                    for engine_id in LIST_WITH_ENGINES:
+                        if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
+                            DICT_WITH_CARRIAGES[engine_id].press_bar(pygame.mouse.get_pos())
+                    # print(str(which_segment(DICT_WITH_SEGMENTS, move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE), 5)))
                 # 2 - middle click
                 # 3 - right click
                 # 4 - scroll up
@@ -104,7 +107,7 @@ def run():
 
         # draw interface
         for bar in LIST_WITH_ENGINES:
-            DICT_WITH_CARRIAGES[bar].draw_bar(WIN, (1150,29*bar))
+            DICT_WITH_CARRIAGES[bar].draw_bar(WIN)
 
         # flip the screen
         pygame.display.update()

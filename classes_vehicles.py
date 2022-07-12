@@ -31,10 +31,13 @@ class Vehicle:
             self.v_current -= Vehicle.acceleration
             if self.v_target > self.v_current: self.v_current = self.v_target
 
+        if self.state == "stop" and self.v_current != 0: self.state = "move"
+        elif self.state == "move" and self.v_target == 0 and self.v_current == 0: self.state = "stop"
+
     def move(self):
         self.coord[0] += self.v_current
-        if self.v_target == self.v_current:
-            self.v_target = -self.v_target
+        # if self.v_target == self.v_current:
+        #     self.v_target = -self.v_target
 
 class Engine(Vehicle):
     def __init__(self, id, coord, angle, segment):
@@ -42,20 +45,38 @@ class Engine(Vehicle):
         self.r = 0
         self.state = "manual"
 
-    def draw_bar(self, win, orgin):
+        # control bar
+        self.orgin = [0, 0] # bar orgin
+        self.set_new_bar_orgin(self.orgin)
+
+    def set_new_bar_orgin(self, orgin):
         width = 110
         height = 30
         lenght = width - height - 10
+        self.bar = pygame.Rect([*orgin, width, height])
+        self.bar_auto_button = pygame.Rect([*move_point(orgin, 10, 10), 10, 10])
+        self.bar_slower = pygame.Rect([self.bar_auto_button.right+10, self.bar_auto_button.top, lenght/2, 10])
+        self.bar_faster = pygame.Rect([*self.bar_slower.topright, lenght/2, 10])
 
-        pygame.draw.rect(win, BLACK, [*orgin, width, height], 0)
-        pygame.draw.rect(win, WHITE, [*orgin, width, height], 1)
+    def draw_bar(self, win):
+        width = self.bar.width
+        height = self.bar.height
+        lenght = width - height - 10
+        orgin = self.bar.topleft
+
+        pygame.draw.rect(win, BLACK, self.bar, 0)
+        pygame.draw.rect(win, WHITE, self.bar, 1)
+
+        # pygame.draw.rect(win, YELLOW, self.bar_auto_button, 0)
+        # pygame.draw.rect(win, BLUE, self.bar_slower, 0)
+        # pygame.draw.rect(win, RED, self.bar_faster, 0)
 
         # draw state indicator
         if self.state == "manual": color = BLUE
         elif self.state == "stop": color = GREEN
         elif self.state == "move": color = YELLOW
         else: color = RED
-        pygame.draw.circle(win, color, move_point(orgin, 15, 15, 1), 4, 0)
+        pygame.draw.circle(win, color, self.bar_auto_button.center, 4, 0)
 
         # draw velocity indicator
         # target velocity
@@ -70,11 +91,20 @@ class Engine(Vehicle):
 
     def is_bar_pressed(self, click):
     # check if the bar is pressed
-        return self.rect.collidepoint(click)
+        return self.bar.collidepoint(click)
 
-    def press_bar(self, click, engine):
-        if self.is_pressed(click):
-            pass
+    def press_bar(self, click):
+        if self.bar_auto_button.collidepoint(click):
+            if self.state == "manual": self.state = "stop"
+            elif self.state == "stop" or self.state == "move": self.state = "manual"
+        if self.bar_faster.collidepoint(click):
+            if self.state == "manual":
+                self.v_target += 0.5
+                if self.v_target >= 5: self.v_target = 5
+        if self.bar_slower.collidepoint(click):
+            if self.state == "manual":
+                self.v_target -= 0.5
+                if self.v_target <= -5: self.v_target = -5
 
 class Carriage(Vehicle):
     def __init__(self, id, coord, angle, segment):

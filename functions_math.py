@@ -2,7 +2,7 @@ import math
 
 from settings import *
 
-def move_point(point, offset_x, offset_y, scale):
+def move_point(point, offset_x, offset_y, scale = 1):
 # function that change coordinates of point by offset and scale
 
     # new_point = (point[0] + OFFSET_HORIZONTAL, point[1] + OFFSET_VERTICAL)
