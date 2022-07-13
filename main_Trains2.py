@@ -2,6 +2,9 @@ import pygame
 import time
 import os
 
+from sys import path
+path.append('.\\src')
+
 from settings import *
 from classes_world import *
 from classes_vehicles import *
