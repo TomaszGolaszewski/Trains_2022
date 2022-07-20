@@ -29,8 +29,8 @@ def dist_to_segment(segment, test_point):
     # print(str(l))
     # print(str(d1))
     # print(str(d2))
-    # print(str(d1**2 - (0.5*(d1**2-d2**2)/l + 0.5*l) ** 2))
+    # print(str(ds1 - (0.5*(ds1-ds2)/l + 0.5*l) ** 2))
     # return 0
     if ds1 - ds2 > ls: return d2
     elif ds2 - ds1 > ls: return d1
-    else: return math.sqrt(ds1 - (0.5*(ds1-ds2)/l + 0.5*l) ** 2)
+    else: return math.sqrt(abs(ds1 - (0.5*(ds1-ds2)/l + 0.5*l) ** 2)) # abs is for numerical errors around 0

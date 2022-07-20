@@ -19,6 +19,10 @@ class Segment:
         self.segment2 = segment2 # id of point after
         self.state = "active"
 
+    def __str__(self):
+        return str(self.segment1) + " " + str(self.point1) + " " + str(self.id) + " " + str(self.point2) + " " + str(self.segment2)
+
+
     def draw(self, win, offset_x, offset_y, scale):
         if self.state == "active": color = WHITE
         elif self.state == "passive": color = BLUE
@@ -36,3 +40,18 @@ class Track_switch:
 
     def draw(self, win, offset_x, offset_y, scale):
         pygame.draw.circle(win, (0, 0, 255), move_point(self.coord, offset_x, offset_y, scale), 4*scale, 0)
+
+    def is_switch_pressed(self, click):
+    # check if the switch button is pressed
+        return dist_two_points(self.coord, click) < 5
+
+    def switch_switch(self, dict_with_segments):
+    # switch the track switch
+        if dict_with_segments[self.first].segment1 == self.active:
+            dict_with_segments[self.first].segment1 = self.passive
+        elif dict_with_segments[self.first].segment2 == self.active:
+            dict_with_segments[self.first].segment2 = self.passive
+
+        dict_with_segments[self.active].state = "passive"
+        dict_with_segments[self.passive].state = "active"
+        self.active, self.passive = self.passive, self.active

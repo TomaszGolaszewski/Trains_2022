@@ -24,6 +24,7 @@ def run():
     pygame.init()
     WIN = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
     CLOCK = pygame.time.Clock()
+    CURRENT_FRAME = 0
 
     # window variables
     OFFSET_VERTICAL = 0
@@ -35,6 +36,8 @@ def run():
     running = True
     while running:
         CLOCK.tick(FRAMERATE)
+        CURRENT_FRAME += 0
+        if CURRENT_FRAME == FRAMERATE: CURRENT_FRAME = 0
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -49,7 +52,12 @@ def run():
                     for engine_id in LIST_WITH_ENGINES:
                         if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
                             DICT_WITH_CARRIAGES[engine_id].press_bar(pygame.mouse.get_pos())
-                    # print(str(which_segment(DICT_WITH_SEGMENTS, move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE), 5)))
+                    for switch_id in DICT_WITH_TRACK_SWITCHES:
+                        if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE)):
+                            DICT_WITH_TRACK_SWITCHES[switch_id].switch_switch(DICT_WITH_SEGMENTS)
+
+                    segment = which_segment(DICT_WITH_SEGMENTS, move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE), 3)
+                    if segment: print(DICT_WITH_SEGMENTS[segment])
                 # 2 - middle click
                 # 3 - right click
                 # 4 - scroll up
@@ -102,10 +110,17 @@ def run():
         for switch_id in DICT_WITH_TRACK_SWITCHES:
             DICT_WITH_TRACK_SWITCHES[switch_id].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
-        # draw trains
+        # check route for auto engines
+        for engine_id in LIST_WITH_ENGINES:
+            if DICT_WITH_CARRIAGES[engine_id].state == "stop" or DICT_WITH_CARRIAGES[engine_id].state == "move":
+                if not CURRENT_FRAME: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_CARRIAGES)
+                pygame.draw.line(WIN, RED, move_point(DICT_WITH_CARRIAGES[engine_id].coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_CARRIAGES[engine_id].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
+
+        # move and draw trains
         for carriage in DICT_WITH_CARRIAGES:
             DICT_WITH_CARRIAGES[carriage].accelerate()
-            DICT_WITH_CARRIAGES[carriage].move()
+            DICT_WITH_CARRIAGES[carriage].move(DICT_WITH_SEGMENTS)
+            DICT_WITH_CARRIAGES[carriage].collision(DICT_WITH_CARRIAGES)
             DICT_WITH_CARRIAGES[carriage].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface
