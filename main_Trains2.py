@@ -36,8 +36,10 @@ def run():
     running = True
     while running:
         CLOCK.tick(FRAMERATE)
-        CURRENT_FRAME += 0
-        if CURRENT_FRAME == FRAMERATE: CURRENT_FRAME = 0
+        CURRENT_FRAME += 1
+        if CURRENT_FRAME == FRAMERATE:
+            CURRENT_FRAME = 0
+            print("FPS: %.2f" % CLOCK.get_fps())
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -53,10 +55,10 @@ def run():
                         if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
                             DICT_WITH_CARRIAGES[engine_id].press_bar(pygame.mouse.get_pos())
                     for switch_id in DICT_WITH_TRACK_SWITCHES:
-                        if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE)):
+                        if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                             DICT_WITH_TRACK_SWITCHES[switch_id].switch_switch(DICT_WITH_SEGMENTS)
 
-                    segment = which_segment(DICT_WITH_SEGMENTS, move_point(pygame.mouse.get_pos(), -OFFSET_HORIZONTAL, -OFFSET_VERTICAL, 1/SCALE), 3)
+                    segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 3)
                     if segment: print(DICT_WITH_SEGMENTS[segment])
                 # 2 - middle click
                 # 3 - right click
@@ -113,7 +115,7 @@ def run():
         # check route for auto engines
         for engine_id in LIST_WITH_ENGINES:
             if DICT_WITH_CARRIAGES[engine_id].state == "stop" or DICT_WITH_CARRIAGES[engine_id].state == "move":
-                if not CURRENT_FRAME: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_CARRIAGES)
+                if not CURRENT_FRAME % 10: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_CARRIAGES)
                 pygame.draw.line(WIN, RED, move_point(DICT_WITH_CARRIAGES[engine_id].coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_CARRIAGES[engine_id].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
 
         # move and draw trains

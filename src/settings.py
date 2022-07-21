@@ -13,3 +13,10 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255,255,0)
 WHITE = (255, 255, 255)
+SILVER = (192, 192, 192)
+GRAY = (128, 128, 128)
+LIGHTSLATEGRAY = (119, 136, 153)
+
+# sprites
+ENGINE_IMGS = pygame.image.load(os.path.join("imgs","engine1.png"))
+CARRIAGE_IMGS = pygame.image.load(os.path.join("imgs","carriage1.png"))

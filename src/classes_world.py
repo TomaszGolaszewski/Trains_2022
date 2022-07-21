@@ -39,11 +39,11 @@ class Track_switch:
         self.passive = passive
 
     def draw(self, win, offset_x, offset_y, scale):
-        pygame.draw.circle(win, (0, 0, 255), move_point(self.coord, offset_x, offset_y, scale), 4*scale, 0)
+        pygame.draw.circle(win, BLUE, move_point(self.coord, offset_x, offset_y, scale), 4*scale, 0)
 
     def is_switch_pressed(self, click):
     # check if the switch button is pressed
-        return dist_two_points(self.coord, click) < 5
+        return dist_two_points(self.coord, click) < 10
 
     def switch_switch(self, dict_with_segments):
     # switch the track switch

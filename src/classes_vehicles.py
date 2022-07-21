@@ -6,6 +6,9 @@ from functions_math import *
 class Vehicle:
     acceleration = 0.02
     v_max = 5
+    lenght = 18
+    width = 8
+    body_radius = 2 * 10
 
     def __init__(self, id, coord, angle, segment):
         self.id = id
@@ -22,8 +25,22 @@ class Vehicle:
         elif self.state == "stop": color = GREEN
         elif self.state == "move": color = YELLOW
         else: color = RED
-        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 4*scale, self.r)
-        pygame.draw.line(win, RED, move_point(self.coord, offset_x, offset_y, scale), move_point(self.coord, offset_x + 8*math.cos(self.angle), offset_y + 8*math.sin(self.angle), scale), 1)
+
+        # draw body
+        # body = pygame.Rect(self.coord, (scale*Vehicle.lenght, scale*Vehicle.width))
+        # body.center = move_point(self.coord, offset_x, offset_y, scale)
+        # pygame.draw.rect(win, LIGHTSLATEGRAY, body)
+        body = self.imgs.get_rect()
+        scaled_image = pygame.transform.scale(self.imgs, (scale*body.width, scale*body.height))
+        rotated_image = pygame.transform.rotate(scaled_image, -math.degrees(self.angle))
+        new_rect = rotated_image.get_rect(center = move_point(self.coord, offset_x, offset_y, scale))
+        win.blit(rotated_image, new_rect.topleft)
+
+        # draw state indicator
+        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 3*scale, self.r)
+
+        # draw angle indicator
+        # if not self.r: pygame.draw.line(win, BLACK, move_point(self.coord, offset_x, offset_y, scale), move_point(self.coord, offset_x + 8*math.cos(self.angle), offset_y + 8*math.sin(self.angle), scale), 1)
 
     def accelerate(self):
         if self.state != "broken":
@@ -41,6 +58,7 @@ class Vehicle:
         if self.state != "broken" and self.v_current:
             last_coord = self.coord
             last_point = self.coord
+            last_segment = self.segment
             self.coord[0] += self.v_current*math.cos(self.angle)
             self.coord[1] += self.v_current*math.sin(self.angle)
 
@@ -59,9 +77,14 @@ class Vehicle:
 
                 else: self.state = "broken"
 
+                # check end of the track
+                if self.segment == 9999:
+                    self.state = "broken"
+                    self.segment = last_segment
+
                 # calculate new angle
                 new_angle = math.atan2(dict_with_segments[self.segment].point2[1]-dict_with_segments[self.segment].point1[1], dict_with_segments[self.segment].point2[0]-dict_with_segments[self.segment].point1[0])
-                if abs(new_angle - self.angle) < math.pi/2 or abs(new_angle - self.angle) > 3*math.pi/2: self.angle = new_angle
+                if abs(new_angle - self.angle) < math.pi/2 or abs(new_angle - self.angle) > 3*math.pi/2 and abs(new_angle - self.angle) < 5*math.pi/2: self.angle = new_angle
                 else: self.angle = new_angle + math.pi
 
                 # calculate new postion after turn
@@ -69,17 +92,23 @@ class Vehicle:
                 self.coord[1] = last_point[1] + (self.v_current-dist)*math.sin(self.angle)
 
 
-
     def collision(self, dict_with_carriages):
         for carriage_id in dict_with_carriages:
-            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= 5:
+            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment:
                 self.state = "broken"
                 dict_with_carriages[carriage_id].state = "broken"
+
+    def is_collision(self, dict_with_carriages):
+        for carriage_id in dict_with_carriages:
+            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment:
+                return True
+        return False
 
 class Engine(Vehicle):
     def __init__(self, id, coord, angle, segment):
         Vehicle.__init__(self, id, coord, angle, segment)
         self.r = 0
+        self.imgs = ENGINE_IMGS
         self.state = "manual"
         self.fore_run_end = coord.copy()
 
@@ -145,14 +174,34 @@ class Engine(Vehicle):
                 if self.v_target <= -Vehicle.v_max: self.v_target = -Vehicle.v_max
 
     def fore_run(self, dict_with_segments, dict_with_carriages):
+    # function that checkes if the track in front of the train is free
+        max_steps = 200
+        min_v_fore_run = 0.2
+
+        # make test engine
         ghost_engine = Engine(self.id, self.coord.copy(), self.angle, self.segment)
-        ghost_engine.v_current = self.v_current
-        for _ in range(200):
+        # set speed of the test engine
+        if self.v_current > min_v_fore_run: ghost_engine.v_current = self.v_current
+        else: ghost_engine.v_current = min_v_fore_run
+        # run fore-run
+        for step in range(max_steps+1):
             ghost_engine.move(dict_with_segments)
-        self.v_target = Vehicle.v_max
+            if ghost_engine.is_collision(dict_with_carriages): break
+            if dict_with_segments[ghost_engine.segment].state == "passive": break
+            if ghost_engine.state == "broken": break
+
+        # if the track is free - accelerate
+        if step == max_steps:
+            self.v_target += 1
+            if self.v_target >= Vehicle.v_max: self.v_target = Vehicle.v_max
+        # if fore-run encounters a problem - slow down
+        else:
+            self.v_target -= 1
+            if self.v_target <= 0: self.v_target = 0
         self.fore_run_end = ghost_engine.coord.copy()
 
 class Carriage(Vehicle):
     def __init__(self, id, coord, angle, segment):
         Vehicle.__init__(self, id, coord, angle, segment)
         self.r = 1
+        self.imgs = CARRIAGE_IMGS

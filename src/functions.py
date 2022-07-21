@@ -65,6 +65,21 @@ def load_from_file():
             dict_with_track_switches[number] = Track_switch(number, (x, y), first, active, passive)
             dict_with_segments[passive].state = "passive"
 
+        # check correctness of passive segments
+        for switch_id in dict_with_track_switches:
+            if dict_with_segments[dict_with_track_switches[switch_id].passive].segment1 != dict_with_track_switches[switch_id].first:
+                if dict_with_segments[dict_with_track_switches[switch_id].passive].segment2 != dict_with_track_switches[switch_id].first:
+                    if dist_two_points(dict_with_segments[dict_with_track_switches[switch_id].passive].point1, dict_with_segments[dict_with_track_switches[switch_id].first].point1) < 1:
+                        dict_with_segments[dict_with_track_switches[switch_id].passive].segment1 = dict_with_track_switches[switch_id].first
+                    if dist_two_points(dict_with_segments[dict_with_track_switches[switch_id].passive].point1, dict_with_segments[dict_with_track_switches[switch_id].first].point2) < 1:
+                        dict_with_segments[dict_with_track_switches[switch_id].passive].segment1 = dict_with_track_switches[switch_id].first
+                    if dist_two_points(dict_with_segments[dict_with_track_switches[switch_id].passive].point2, dict_with_segments[dict_with_track_switches[switch_id].first].point1) < 1:
+                        dict_with_segments[dict_with_track_switches[switch_id].passive].segment2 = dict_with_track_switches[switch_id].first
+                    if dist_two_points(dict_with_segments[dict_with_track_switches[switch_id].passive].point2, dict_with_segments[dict_with_track_switches[switch_id].first].point2) < 1:
+                        dict_with_segments[dict_with_track_switches[switch_id].passive].segment2 = dict_with_track_switches[switch_id].first
+                    # dict_with_segments[dict_with_track_switches[switch_id].passive].state = "wrong"
+                    # print(str(switch_id)+" "+str(dict_with_track_switches[switch_id].passive))
+
         # close file
         map_file.close()
 
@@ -87,8 +102,8 @@ def make_test_trains(dict_with_segments):
         id += 1
 
     for i in range(5):
-        for j in range(9):
-            dict[id] = Carriage(id, [30+20*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        for j in range(8):
+            dict[id] = Carriage(id, [30+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
             id += 1
 
     return dict, list_with_engines
