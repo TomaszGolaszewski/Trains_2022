@@ -173,10 +173,11 @@ class Engine(Vehicle):
                 self.v_target -= 0.5
                 if self.v_target <= -Vehicle.v_max: self.v_target = -Vehicle.v_max
 
-    def fore_run(self, dict_with_segments, dict_with_carriages):
+    def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
     # function that checkes if the track in front of the train is free
-        max_steps = 200
-        min_v_fore_run = 0.2
+        max_steps = 150
+        min_v_fore_run = 0.3
+        stop = False
 
         # make test engine
         ghost_engine = Engine(self.id, self.coord.copy(), self.angle, self.segment)
@@ -187,8 +188,15 @@ class Engine(Vehicle):
         for step in range(max_steps+1):
             ghost_engine.move(dict_with_segments)
             if ghost_engine.is_collision(dict_with_carriages): break
-            if dict_with_segments[ghost_engine.segment].state == "passive": break
+            # if dict_with_segments[ghost_engine.segment].state == "passive": break
             if ghost_engine.state == "broken": break
+            for semaphore_id in dict_with_semaphores:
+                if dict_with_semaphores[semaphore_id].stop_train(ghost_engine.coord):
+                    stop = True
+                    break
+            if stop: break
+
+        for semaphore_id in dict_with_semaphores: dict_with_semaphores[semaphore_id].reset()
 
         # if the track is free - accelerate
         if step == max_steps:

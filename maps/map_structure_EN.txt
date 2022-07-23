@@ -1,0 +1,17 @@
+number of points	number of segments	number of track switches	number of semaphores
+
+
+points
+no.	x	y	segment1	segment2 (9999 for end of track)
+
+
+segments
+no.	point1		point2
+
+
+switches
+no.	x	y	one segment		active segment		passive segment		point
+
+
+semaphores
+no.	x light		y light		x sensor	y sensor

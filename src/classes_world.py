@@ -55,3 +55,56 @@ class Track_switch:
         dict_with_segments[self.active].state = "passive"
         dict_with_segments[self.passive].state = "active"
         self.active, self.passive = self.passive, self.active
+
+
+class Semaphore:
+    def __init__(self, number, light_coord, sensor_coord):
+        self.number = number
+        self.light_coord = light_coord
+        self.sensor_coord = sensor_coord
+        self.light = "red"
+        self.light_used = False
+        self.sensor_used = False
+        self.light_on = False
+        self.sensor_on = False
+
+    def is_pressed(self, click):
+    # check if the light button is pressed
+        return dist_two_points(self.light_coord, click) < 5
+
+    def change_light(self):
+    # change color of the light
+        if self.light == "red": self.light = "green"
+        elif self.light == "green": self.light = "red"
+
+    def draw(self, win, offset_x, offset_y, scale):
+        if self.light == "green": color = GREEN
+        elif self.light == "yellow": color = YELLOW
+        else: color = RED
+        pygame.draw.circle(win, WHITE, move_point(self.sensor_coord, offset_x, offset_y, scale), 4*scale, 1)
+        pygame.draw.circle(win, color, move_point(self.light_coord, offset_x, offset_y, scale), 4*scale, 0)
+
+    def reset(self):
+        self.light_used = False
+        self.sensor_used = False
+        self.light_on = False
+        self.sensor_on = False
+
+    def stop_train(self, position):
+        if self.light == "red":
+            if dist_two_points(self.light_coord, position) < 3 and not self.light_used:
+                if self.sensor_on:
+                    self.sensor_on = False
+                    self.light_used = True
+                    return True # train has to stop
+                else:
+                    self.light_on = True # train is moving from behind
+                self.light_used = True
+
+            elif dist_two_points(self.sensor_coord, position) < 3 and not self.sensor_used:
+                if self.light_on:
+                    self.light_on = False # train is moving from behind
+                else:
+                    self.sensor_on = True # train is moving from front
+                self.sensor_used = True
+        return False

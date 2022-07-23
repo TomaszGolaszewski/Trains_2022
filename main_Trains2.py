@@ -15,7 +15,7 @@ def run():
 # main function - runs the simulation
 
     # load data
-    DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES = load_from_file()
+    DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES = load_from_file()
 
     # make test TRAINS
     DICT_WITH_CARRIAGES, LIST_WITH_ENGINES = make_test_trains(DICT_WITH_SEGMENTS)
@@ -39,7 +39,8 @@ def run():
         CURRENT_FRAME += 1
         if CURRENT_FRAME == FRAMERATE:
             CURRENT_FRAME = 0
-            print("FPS: %.2f" % CLOCK.get_fps())
+            print("FPS: %.2f" % CLOCK.get_fps(), end="\t")
+            print("TIME: " + str(pygame.time.get_ticks() // 1000))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -57,9 +58,14 @@ def run():
                     for switch_id in DICT_WITH_TRACK_SWITCHES:
                         if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                             DICT_WITH_TRACK_SWITCHES[switch_id].switch_switch(DICT_WITH_SEGMENTS)
+                    for semaphore_id in DICT_WITH_SEMAPHORES:
+                        if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
+                            DICT_WITH_SEMAPHORES[semaphore_id].change_light()
 
                     segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 3)
                     if segment: print(DICT_WITH_SEGMENTS[segment])
+
+                    print(str(pygame.mouse.get_pos()))
                 # 2 - middle click
                 # 3 - right click
                 # 4 - scroll up
@@ -102,7 +108,10 @@ def run():
             SCALE = 1
 
         # clear screen
-        WIN.fill((0,0,0))
+        WIN.fill(BLACK)
+
+        # draw platforms
+        draw_test_platforms(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw track layout
         for segment_id in DICT_WITH_SEGMENTS:
@@ -115,7 +124,7 @@ def run():
         # check route for auto engines
         for engine_id in LIST_WITH_ENGINES:
             if DICT_WITH_CARRIAGES[engine_id].state == "stop" or DICT_WITH_CARRIAGES[engine_id].state == "move":
-                if not CURRENT_FRAME % 10: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_CARRIAGES)
+                if not CURRENT_FRAME % 10: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES)
                 pygame.draw.line(WIN, RED, move_point(DICT_WITH_CARRIAGES[engine_id].coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_CARRIAGES[engine_id].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
 
         # move and draw trains
@@ -124,6 +133,10 @@ def run():
             DICT_WITH_CARRIAGES[carriage].move(DICT_WITH_SEGMENTS)
             DICT_WITH_CARRIAGES[carriage].collision(DICT_WITH_CARRIAGES)
             DICT_WITH_CARRIAGES[carriage].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+
+        # draw semaphores
+        for semaphore in DICT_WITH_SEMAPHORES:
+            DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface
         for bar in LIST_WITH_ENGINES:

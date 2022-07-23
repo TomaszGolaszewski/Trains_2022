@@ -1,0 +1,17 @@
+lp. punktów	lp. odcinków	lp. zwrotnic	lp. semaforów
+
+
+punkty
+lp.	x	y	1. odcinek	2. odcinek (9999 dla końca)
+
+
+odcinki
+lp.	1. punkt	2. punkt
+
+
+zwrotnice
+lp.	x	y	jedyny odcinek		aktywny odcinek		pasywny odcinek		punkt
+
+
+semafory
+lp.	x światła	y światła	x czujnika	y czujnika

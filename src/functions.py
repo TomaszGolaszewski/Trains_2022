@@ -16,10 +16,11 @@ def load_from_file():
         map_file = open(os.path.join("maps","map.txt"), "r")
 
         # read numbers of world building elements
-        number_of_points, number_of_segments, number_of_track_switches = map_file.readline().split()
+        number_of_points, number_of_segments, number_of_track_switches, number_of_semaphores = map_file.readline().split()
         number_of_points = int(number_of_points)
         number_of_segments = int(number_of_segments)
         number_of_track_switches = int(number_of_track_switches)
+        number_of_semaphores = int(number_of_semaphores)
 
         # read empty line
         map_file.readline()
@@ -80,15 +81,28 @@ def load_from_file():
                     # dict_with_segments[dict_with_track_switches[switch_id].passive].state = "wrong"
                     # print(str(switch_id)+" "+str(dict_with_track_switches[switch_id].passive))
 
+        # read empty line
+        map_file.readline()
+
+        # read semaphores
+        dict_with_semaphores = {}
+        for _ in range(number_of_semaphores):
+            id, x_light, y_light, x_sensor, y_sensor  = [int(i) for i in map_file.readline().split()]
+            # (self, njumber, light_coord, sensor_coord)
+            dict_with_semaphores[id] = Semaphore(id, (x_light, y_light), (x_sensor, y_sensor))
+
         # close file
         map_file.close()
 
         # return dictionaries with data
-        return dict_with_segments, dict_with_track_switches
+        return dict_with_segments, dict_with_track_switches, dict_with_semaphores
 
     # except:
     #     print("Map error")
     #     quit()
+
+def load_from_file_2():
+    pass
 
 def make_test_trains(dict_with_segments):
     id = 0
@@ -107,6 +121,27 @@ def make_test_trains(dict_with_segments):
             id += 1
 
     return dict, list_with_engines
+
+def draw_test_platforms(win, offset_x, offset_y, scale):
+
+    # //TomaszLand Zachodni
+	# bar(24,270,27,550);
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((24,270), offset_x, offset_y, scale), 3*scale, 280*scale))
+
+	# //TomaszLand Centralny
+	# bar(450,644,730,647);
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,644), offset_x, offset_y, scale), 280*scale,3*scale))
+	# bar(450,664,730,667);
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,664), offset_x, offset_y, scale), 280*scale, 3*scale))
+	# bar(450,684,730,687);
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,684), offset_x, offset_y, scale), 280*scale, 3*scale))
+
+	# //TomaszLand Wschodni
+	# //bar(1124,140,1127,420);
+	# bar(1114,140,1117,420);
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1114,140), offset_x, offset_y, scale), 3*scale, 280*scale))
+	# bar(1134,140,1137,420);
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1134,140), offset_x, offset_y, scale), 3*scale, 280*scale))
 
 def which_segment(dict_with_segments, point, offset):
     for segment_id in dict_with_segments:
