@@ -129,9 +129,10 @@ def run():
 
         # move and draw trains
         for carriage in DICT_WITH_CARRIAGES:
-            DICT_WITH_CARRIAGES[carriage].accelerate()
+            DICT_WITH_CARRIAGES[carriage].accelerate(DICT_WITH_CARRIAGES)
             DICT_WITH_CARRIAGES[carriage].move(DICT_WITH_SEGMENTS)
             DICT_WITH_CARRIAGES[carriage].collision(DICT_WITH_CARRIAGES)
+            DICT_WITH_CARRIAGES[carriage].change_semaphore(DICT_WITH_SEMAPHORES)
             DICT_WITH_CARRIAGES[carriage].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw semaphores

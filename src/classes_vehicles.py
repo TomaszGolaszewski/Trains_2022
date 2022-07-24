@@ -18,6 +18,8 @@ class Vehicle:
         self.v_target = 0
         self.v_current = 0
         self.segment = segment
+        self.engine_id = 0
+        self.next_carriage = 0
         # self.type
 
     def draw(self, win, offset_x, offset_y, scale):
@@ -37,12 +39,12 @@ class Vehicle:
         win.blit(rotated_image, new_rect.topleft)
 
         # draw state indicator
-        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 3*scale, self.r)
+        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 3*scale, int(self.engine_id == 0))
 
         # draw angle indicator
         # if not self.r: pygame.draw.line(win, BLACK, move_point(self.coord, offset_x, offset_y, scale), move_point(self.coord, offset_x + 8*math.cos(self.angle), offset_y + 8*math.sin(self.angle), scale), 1)
 
-    def accelerate(self):
+    def accelerate(self, dict_with_carriages = {}):
         if self.state != "broken":
             if self.v_target > self.v_current:
                 self.v_current += Vehicle.acceleration
@@ -91,18 +93,36 @@ class Vehicle:
                 self.coord[0] = last_point[0] + (self.v_current-dist)*math.cos(self.angle)
                 self.coord[1] = last_point[1] + (self.v_current-dist)*math.sin(self.angle)
 
-
     def collision(self, dict_with_carriages):
+    # check whether a collision occurs and...
         for carriage_id in dict_with_carriages:
-            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment:
-                self.state = "broken"
-                dict_with_carriages[carriage_id].state = "broken"
+            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id:
+                # ...break carriages
+                if abs(self.v_current) > 0.75:
+                    self.state = "broken"
+                    dict_with_carriages[carriage_id].state = "broken"
+                # ...connect carriages
+                else:
+                    dict_with_carriages[carriage_id].engine_id = self.engine_id
+                    self.next_carriage = dict_with_carriages[carriage_id].next_carriage
+                    dict_with_carriages[carriage_id].v_target = self.v_target
+                    dict_with_carriages[carriage_id].v_current = self.v_current
+                    dict_with_carriages[carriage_id].state = self.state
+                    dict_with_carriages[carriage_id].angle = self.angle
 
     def is_collision(self, dict_with_carriages):
+    # check whether a collision occurs
         for carriage_id in dict_with_carriages:
-            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment:
+            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id:
                 return True
         return False
+
+    def change_semaphore(self, dict_with_semaphores):
+    # change light of the semaphore to red
+        for semaphore_id in dict_with_semaphores:
+            if dict_with_semaphores[semaphore_id].light == "green" and dict_with_semaphores[semaphore_id].is_pressed(self.coord):
+                dict_with_semaphores[semaphore_id].light = "red"
+
 
 class Engine(Vehicle):
     def __init__(self, id, coord, angle, segment):
@@ -111,6 +131,7 @@ class Engine(Vehicle):
         self.imgs = ENGINE_IMGS
         self.state = "manual"
         self.fore_run_end = coord.copy()
+        self.engine_id = id
 
         # control bar
         self.orgin = [0, 0] # bar orgin
@@ -213,3 +234,8 @@ class Carriage(Vehicle):
         Vehicle.__init__(self, id, coord, angle, segment)
         self.r = 1
         self.imgs = CARRIAGE_IMGS
+
+    def accelerate(self, dict_with_carriages):
+        if self.engine_id:
+            self.v_current = dict_with_carriages[self.engine_id].v_current
+            self.state = dict_with_carriages[self.engine_id].state

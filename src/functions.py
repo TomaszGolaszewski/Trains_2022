@@ -105,7 +105,7 @@ def load_from_file_2():
     pass
 
 def make_test_trains(dict_with_segments):
-    id = 0
+    id = 1
     dict = {}
     list_with_engines = []
 
