@@ -110,14 +110,16 @@ def make_test_trains(dict_with_segments):
     list_with_engines = []
 
     for i in range(5):
-        dict[id] = Engine(id, [230, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        # dict[id] = Engine(id, [230, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        dict[id] = Engine(id, [170, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
         dict[id].set_new_bar_orgin((1150,29*i))
         list_with_engines.append(id)
         id += 1
 
     for i in range(5):
-        for j in range(8):
-            dict[id] = Carriage(id, [30+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        for j in range(10):
+            # dict[id] = Carriage(id, [30+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+            dict[id] = Carriage(id, [-70+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
             id += 1
 
     return dict, list_with_engines

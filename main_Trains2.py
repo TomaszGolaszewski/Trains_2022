@@ -1,3 +1,9 @@
+# Trains 2022
+# By Tomasz Golaszewski
+# 07.2022
+
+# Railway traffic control simulator written in an object-oriented way
+
 import pygame
 import time
 import os
@@ -22,13 +28,15 @@ def run():
 
     # initialize the pygame
     pygame.init()
+    pygame.display.set_caption("Trains 2022")
+    pygame.display.set_icon(ICON)
     WIN = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
     CLOCK = pygame.time.Clock()
     CURRENT_FRAME = 0
 
     # window variables
     OFFSET_VERTICAL = 0
-    OFFSET_HORIZONTAL = 0
+    OFFSET_HORIZONTAL = 90
     SCALE = 1
     # WIN_MOD_PARAM = (OFFSET_VERTICAL, OFFSET_HORIZONTAL, SCALE)
 
@@ -123,13 +131,14 @@ def run():
 
         # check route for auto engines
         for engine_id in LIST_WITH_ENGINES:
+            DICT_WITH_CARRIAGES[engine_id].accelerate()
             if DICT_WITH_CARRIAGES[engine_id].state == "stop" or DICT_WITH_CARRIAGES[engine_id].state == "move":
                 if not CURRENT_FRAME % 10: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES)
                 pygame.draw.line(WIN, RED, move_point(DICT_WITH_CARRIAGES[engine_id].coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_CARRIAGES[engine_id].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
 
         # move and draw trains
         for carriage in DICT_WITH_CARRIAGES:
-            DICT_WITH_CARRIAGES[carriage].accelerate(DICT_WITH_CARRIAGES)
+            DICT_WITH_CARRIAGES[carriage].push_pull(DICT_WITH_CARRIAGES)
             DICT_WITH_CARRIAGES[carriage].move(DICT_WITH_SEGMENTS)
             DICT_WITH_CARRIAGES[carriage].collision(DICT_WITH_CARRIAGES)
             DICT_WITH_CARRIAGES[carriage].change_semaphore(DICT_WITH_SEMAPHORES)

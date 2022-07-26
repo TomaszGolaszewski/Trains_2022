@@ -18,5 +18,6 @@ GRAY = (128, 128, 128)
 LIGHTSLATEGRAY = (119, 136, 153)
 
 # sprites
+ICON = pygame.image.load(os.path.join("imgs","icon.png"))
 ENGINE_IMGS = pygame.image.load(os.path.join("imgs","engine1.png"))
 CARRIAGE_IMGS = pygame.image.load(os.path.join("imgs","carriage1.png"))

@@ -8,7 +8,7 @@ class Vehicle:
     v_max = 5
     lenght = 18
     width = 8
-    body_radius = 2 * 10
+    body_radius = 2 * 10 + 1
 
     def __init__(self, id, coord, angle, segment):
         self.id = id
@@ -44,7 +44,7 @@ class Vehicle:
         # draw angle indicator
         # if not self.r: pygame.draw.line(win, BLACK, move_point(self.coord, offset_x, offset_y, scale), move_point(self.coord, offset_x + 8*math.cos(self.angle), offset_y + 8*math.sin(self.angle), scale), 1)
 
-    def accelerate(self, dict_with_carriages = {}):
+    def accelerate(self):
         if self.state != "broken":
             if self.v_target > self.v_current:
                 self.v_current += Vehicle.acceleration
@@ -55,6 +55,11 @@ class Vehicle:
 
             if self.state == "stop" and self.v_current != 0: self.state = "move"
             elif self.state == "move" and self.v_target == 0 and self.v_current == 0: self.state = "stop"
+
+    def push_pull(self, dict_with_carriages = {}):
+        if self.engine_id and self.engine_id != self.id:
+            self.v_current = dict_with_carriages[self.engine_id].v_current
+            self.state = dict_with_carriages[self.engine_id].state
 
     def move(self, dict_with_segments):
         if self.state != "broken" and self.v_current:
@@ -90,8 +95,8 @@ class Vehicle:
                 else: self.angle = new_angle + math.pi
 
                 # calculate new postion after turn
-                self.coord[0] = last_point[0] + (self.v_current-dist)*math.cos(self.angle)
-                self.coord[1] = last_point[1] + (self.v_current-dist)*math.sin(self.angle)
+                self.coord[0] = last_point[0] + dist*math.cos(self.angle)
+                self.coord[1] = last_point[1] + dist*math.sin(self.angle)
 
     def collision(self, dict_with_carriages):
     # check whether a collision occurs and...
@@ -235,7 +240,5 @@ class Carriage(Vehicle):
         self.r = 1
         self.imgs = CARRIAGE_IMGS
 
-    def accelerate(self, dict_with_carriages):
-        if self.engine_id:
-            self.v_current = dict_with_carriages[self.engine_id].v_current
-            self.state = dict_with_carriages[self.engine_id].state
+    def accelerate(self):
+        pass
