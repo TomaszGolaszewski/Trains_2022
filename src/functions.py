@@ -1,4 +1,5 @@
 import os
+import random
 
 from classes_world import *
 from classes_vehicles import *
@@ -111,15 +112,16 @@ def make_test_trains(dict_with_segments):
 
     for i in range(5):
         # dict[id] = Engine(id, [230, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
-        dict[id] = Engine(id, [170, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        dict[id] = Engine(id, [220 + random.randint(0,10), 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
         dict[id].set_new_bar_orgin((1150,29*i))
         list_with_engines.append(id)
         id += 1
 
     for i in range(5):
-        for j in range(10):
+        offset = random.randint(0,10)
+        for j in range(10 + random.randint(0,3)):
             # dict[id] = Carriage(id, [30+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
-            dict[id] = Carriage(id, [-70+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+            dict[id] = Carriage(id, [-80 + 22*j + offset , 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
             id += 1
 
     return dict, list_with_engines

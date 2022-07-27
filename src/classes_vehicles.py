@@ -1,4 +1,5 @@
 import pygame
+import random
 
 from settings import *
 from functions_math import *
@@ -39,7 +40,7 @@ class Vehicle:
         win.blit(rotated_image, new_rect.topleft)
 
         # draw state indicator
-        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 3*scale, int(self.engine_id == 0))
+        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 2*scale, int(self.engine_id == 0))
 
         # draw angle indicator
         # if not self.r: pygame.draw.line(win, BLACK, move_point(self.coord, offset_x, offset_y, scale), move_point(self.coord, offset_x + 8*math.cos(self.angle), offset_y + 8*math.sin(self.angle), scale), 1)
@@ -105,7 +106,9 @@ class Vehicle:
                 # ...break carriages
                 if abs(self.v_current) > 0.75:
                     self.state = "broken"
+                    if self.engine_id: dict_with_carriages[self.engine_id].state = "broken"
                     dict_with_carriages[carriage_id].state = "broken"
+                    if dict_with_carriages[carriage_id].engine_id: dict_with_carriages[dict_with_carriages[carriage_id].engine_id].state = "broken"
                 # ...connect carriages
                 else:
                     dict_with_carriages[carriage_id].engine_id = self.engine_id
@@ -238,7 +241,7 @@ class Carriage(Vehicle):
     def __init__(self, id, coord, angle, segment):
         Vehicle.__init__(self, id, coord, angle, segment)
         self.r = 1
-        self.imgs = CARRIAGE_IMGS
+        self.imgs = CARRIAGE_IMGS[random.randint(0,2)]
 
     def accelerate(self):
         pass

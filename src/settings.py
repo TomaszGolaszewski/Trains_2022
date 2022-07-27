@@ -20,4 +20,7 @@ LIGHTSLATEGRAY = (119, 136, 153)
 # sprites
 ICON = pygame.image.load(os.path.join("imgs","icon.png"))
 ENGINE_IMGS = pygame.image.load(os.path.join("imgs","engine1.png"))
-CARRIAGE_IMGS = pygame.image.load(os.path.join("imgs","carriage1.png"))
+CARRIAGE_IMGS = [
+    pygame.image.load(os.path.join("imgs","carriage1.png")),
+    pygame.image.load(os.path.join("imgs","carriage1_container_green.png")),
+    pygame.image.load(os.path.join("imgs","carriage1_container_blue.png"))]
