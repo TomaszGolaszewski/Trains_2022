@@ -16,6 +16,7 @@ WHITE = (255, 255, 255)
 SILVER = (192, 192, 192)
 GRAY = (128, 128, 128)
 LIGHTSLATEGRAY = (119, 136, 153)
+DARKSTEELGRAY = (67,70,75)
 
 # sprites
 ICON = pygame.image.load(os.path.join("imgs","icon.png"))

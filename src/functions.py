@@ -102,8 +102,71 @@ def load_from_file():
     #     print("Map error")
     #     quit()
 
-def load_from_file_2():
-    pass
+def load_from_file_v2():
+# function that load data from file in Trains_2022 standard
+
+    # open file
+    # try:
+    if 1:
+        # try to open file
+        map_file = open(os.path.join("maps","new_map.txt"), "r")
+
+        # read empty line
+        map_file.readline()
+
+        # read numbers of world building elements
+        number_of_segments, number_of_track_switches, number_of_semaphores = map_file.readline().split()
+        number_of_segments = int(number_of_segments)
+        number_of_track_switches = int(number_of_track_switches)
+        number_of_semaphores = int(number_of_semaphores)
+
+        # read empty line
+        map_file.readline()
+        map_file.readline()
+        map_file.readline()
+
+        # read segments
+        dict_with_segments = {}
+        for _ in range(number_of_segments):
+            id, point1_x, point1_y, point2_x, point2_y, segment1, segment2 = [int(i) for i in map_file.readline().split()]
+
+            # (self, id, point1, point2, segment1, segment2)
+            dict_with_segments[id] = Segment(id, [point1_x, point1_y], [point2_x, point2_y], segment1, segment2)
+
+        # read empty line
+        map_file.readline()
+        map_file.readline()
+        map_file.readline()
+
+        # read track switches
+        dict_with_track_switches = {}
+        for _ in range(number_of_track_switches):
+            number, x, y, first, active, passive = [int(i) for i in map_file.readline().split()]
+            # (self, number, coord, first, active, passive)
+            dict_with_track_switches[number] = Track_switch(number, [x, y], first, active, passive)
+            dict_with_segments[passive].state = "passive"
+
+        # read empty line
+        map_file.readline()
+        map_file.readline()
+        map_file.readline()
+
+        # read semaphores
+        dict_with_semaphores = {}
+        for _ in range(number_of_semaphores):
+            id, x_light, y_light, x_sensor, y_sensor  = [int(i) for i in map_file.readline().split()]
+            # (self, njumber, light_coord, sensor_coord)
+            dict_with_semaphores[id] = Semaphore(id, [x_light, y_light], [x_sensor, y_sensor])
+
+        # close file
+        map_file.close()
+
+        # return dictionaries with data
+        return dict_with_segments, dict_with_track_switches, dict_with_semaphores
+
+    # except:
+    #     print("Map error")
+    #     quit()
 
 def make_test_trains(dict_with_segments):
     id = 1

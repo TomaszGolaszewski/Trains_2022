@@ -22,6 +22,8 @@ class Segment:
     def __str__(self):
         return str(self.segment1) + " " + str(self.point1) + " " + str(self.id) + " " + str(self.point2) + " " + str(self.segment2)
 
+    def save(self):
+        return str(self.id) + "\t" + str(self.point1[0]) + "\t" + str(self.point1[1]) + "\t" + str(self.point2[0]) + "\t" + str(self.point2[1]) + "\t" + str(self.segment1) + "\t" + str(self.segment2) + "\n"
 
     def draw(self, win, offset_x, offset_y, scale):
         if self.state == "active": color = WHITE
@@ -29,6 +31,14 @@ class Segment:
         else: color = RED
         pygame.draw.line(win, color, move_point(self.point1, offset_x, offset_y, scale), move_point(self.point2, offset_x, offset_y, scale), 1)
 
+    def draw_ends(self, win, offset_x, offset_y, scale):
+        if self.segment1 == 9999: color = RED
+        else: color = WHITE
+        pygame.draw.circle(win, color, move_point(self.point1, offset_x, offset_y, scale), 4*scale, 0)
+
+        if self.segment2 == 9999: color = RED
+        else: color = WHITE
+        pygame.draw.circle(win, color, move_point(self.point2, offset_x, offset_y, scale), 4*scale, 0)
 
 class Track_switch:
     def __init__(self, number, coord, first, active, passive):
@@ -37,6 +47,9 @@ class Track_switch:
         self.first = first
         self.active = active
         self.passive = passive
+
+    def save(self):
+        return str(self.number) + "\t" + str(self.coord[0]) + "\t" + str(self.coord[1]) + "\t" + str(self.first) + "\t" + str(self.active) + "\t" + str(self.passive) + "\n"
 
     def draw(self, win, offset_x, offset_y, scale):
         pygame.draw.circle(win, BLUE, move_point(self.coord, offset_x, offset_y, scale), 4*scale, 0)
@@ -67,6 +80,9 @@ class Semaphore:
         self.sensor_used = False
         self.light_on = False
         self.sensor_on = False
+
+    def save(self):
+        return str(self.number) + "\t" + str(self.light_coord[0]) + "\t" + str(self.light_coord[1]) + "\t" + str(self.sensor_coord[0]) + "\t" + str(self.sensor_coord[1]) + "\n"
 
     def is_pressed(self, click):
     # check if the light button is pressed
