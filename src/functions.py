@@ -214,3 +214,10 @@ def which_segment(dict_with_segments, point, offset):
     for segment_id in dict_with_segments:
         if dist_to_segment(dict_with_segments[segment_id], point) < offset:
             return segment_id
+    return 9999
+
+def empty_slot(list):
+    lenght = len(list)
+    for i in range(1,lenght):
+        if i not in list: return i
+    return lenght+1

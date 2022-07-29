@@ -1,4 +1,5 @@
 from classes_world import *
+from functions import *
 
 def save_file_v2(dict_with_segments, dict_with_track_switches, dict_with_semaphores):
 # function that save data into file in Trains_2022 standard
@@ -54,3 +55,40 @@ def draw_grid(win, offset_x, offset_y, scale):
         pygame.draw.line(win, DARKSTEELGRAY, (x*10*scale, 0), (x*10*scale, WIN_HEIGHT*scale), 1)
     for y in range(WIN_HEIGHT//10):
         pygame.draw.line(win, DARKSTEELGRAY, (0, y*10*scale), (WIN_WIDTH*scale, y*10*scale), 1)
+
+def add_segment(coord, temp_list, dict_with_segments):
+    if temp_list[0] == 0:
+        temp_list[1] = myround_point(coord)
+        print("Please select second point")
+    elif temp_list[0] == 1:
+        temp_list[2] = myround_point(coord)
+        print("Please select first segment")
+    elif temp_list[0] == 2:
+        segment1 = which_segment(dict_with_segments, coord, 5)
+        if not segment1: segment1 = 9999
+        temp_list[3] = segment1
+        print("Please select second segment")
+    elif temp_list[0] == 3:
+        segment2 = which_segment(dict_with_segments, coord, 5)
+        if not segment2: segment2 = 9999
+        temp_list[4] = segment2
+        new_id = empty_slot(dict_with_segments.keys())
+        dict_with_segments[new_id] = Segment(new_id, *temp_list[1:])
+
+        if temp_list[3] != 9999:
+            if dict_with_segments[temp_list[3]].segment1 == 9999 and dist_two_points(dict_with_segments[temp_list[3]].point1, temp_list[1]) < 1:
+                dict_with_segments[temp_list[3]].segment1 = new_id
+            if dict_with_segments[temp_list[3]].segment2 == 9999 and dist_two_points(dict_with_segments[temp_list[3]].point2, temp_list[1]) < 1:
+                dict_with_segments[temp_list[3]].segment2 = new_id
+        if temp_list[4] != 9999:
+            if dict_with_segments[temp_list[4]].segment1 == 9999 and dist_two_points(dict_with_segments[temp_list[4]].point1, temp_list[2]) < 1:
+                dict_with_segments[temp_list[3]].segment1 = new_id
+            if dict_with_segments[temp_list[4]].segment2 == 9999 and dist_two_points(dict_with_segments[temp_list[4]].point2, temp_list[2]) < 1:
+                dict_with_segments[temp_list[3]].segment2 = new_id
+        print("New segment " + str(new_id) + " has been added")
+
+    temp_list[0] += 1
+    if temp_list[0] >= 4:
+        temp_list[0] = 0
+        return False
+    else: return True

@@ -40,6 +40,10 @@ def run_editor():
     SCALE = 1
     # WIN_MOD_PARAM = (OFFSET_VERTICAL, OFFSET_HORIZONTAL, SCALE)
 
+    # resources for editor
+    new_segment_on = False
+    temp_segment = [0,0,0,0,0]
+
     # main loop
     running = True
     while running:
@@ -60,6 +64,8 @@ def run_editor():
             if event.type == pygame.MOUSEBUTTONUP:
                 # 1 - left click
                 if event.button == 1:
+                    if new_segment_on:
+                        new_segment_on = add_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_segment, DICT_WITH_SEGMENTS)
                     # for engine_id in LIST_WITH_ENGINES:
                     #     if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
                     #         DICT_WITH_CARRIAGES[engine_id].press_bar(pygame.mouse.get_pos())
@@ -70,10 +76,11 @@ def run_editor():
                     #     if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                     #         DICT_WITH_SEMAPHORES[semaphore_id].change_light()
 
-                    segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 3)
-                    if segment: print(DICT_WITH_SEGMENTS[segment])
+                    # segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 3)
+                    # if segment: print(DICT_WITH_SEGMENTS[segment])
 
-                    print(str(pygame.mouse.get_pos()))
+                    # print(str(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)))
+                    print(str(myround_point(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE))))
                 # 2 - middle click
                 # 3 - right click
                 # 4 - scroll up
@@ -116,6 +123,11 @@ def run_editor():
             OFFSET_HORIZONTAL = 0
             OFFSET_VERTICAL = 0
             SCALE = 1
+        # add segment
+        if keys_pressed[pygame.K_1]:
+            new_segment_on = True
+            temp_segment = [0,0,0,0,0]
+            print("Please select first point")
 
         # clear screen
         WIN.fill(BLACK)

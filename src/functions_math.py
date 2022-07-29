@@ -40,3 +40,11 @@ def dist_to_segment(segment, test_point):
     if ds1 - ds2 > ls: return d2
     elif ds2 - ds1 > ls: return d1
     else: return math.sqrt(abs(ds1 - (0.5*(ds1-ds2)/l + 0.5*l) ** 2)) # abs is for numerical errors around 0
+
+def myround(x, target = 5):
+# round x to target
+    return target * round(x / target)
+
+def myround_point(point):
+# round coordinates of the point to 5
+    return (myround(point[0]), myround(point[1]))
