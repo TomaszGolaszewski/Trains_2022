@@ -43,6 +43,8 @@ def run_editor():
     # resources for editor
     new_segment_on = False
     temp_segment = [0,0,0,0,0]
+    new_switch_on = False
+    temp_switch = [0,0,0,0,0]
 
     # main loop
     running = True
@@ -66,12 +68,16 @@ def run_editor():
                 if event.button == 1:
                     if new_segment_on:
                         new_segment_on = add_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_segment, DICT_WITH_SEGMENTS)
+                    if new_switch_on:
+                        new_switch_on = add_switch(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_switch, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEGMENTS)
+
                     # for engine_id in LIST_WITH_ENGINES:
                     #     if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
                     #         DICT_WITH_CARRIAGES[engine_id].press_bar(pygame.mouse.get_pos())
-                    # for switch_id in DICT_WITH_TRACK_SWITCHES:
-                    #     if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
-                    #         DICT_WITH_TRACK_SWITCHES[switch_id].switch_switch(DICT_WITH_SEGMENTS)
+                    if not new_segment_on and not new_switch_on:
+                        for switch_id in DICT_WITH_TRACK_SWITCHES:
+                            if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
+                                DICT_WITH_TRACK_SWITCHES[switch_id].switch_switch(DICT_WITH_SEGMENTS)
                     # for semaphore_id in DICT_WITH_SEMAPHORES:
                     #     if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                     #         DICT_WITH_SEMAPHORES[semaphore_id].change_light()
@@ -103,6 +109,16 @@ def run_editor():
                     running = False
                     pygame.quit()
                     quit()
+                # add segment
+                if event.key == pygame.K_1:
+                    new_segment_on = True
+                    temp_segment = [0,0,0,0,0]
+                    print("Please select first point")
+                # add track switch
+                if event.key == pygame.K_3:
+                    new_switch_on = True
+                    temp_switch = [0,0,0,0,0]
+                    print("Please select button")
 
         # keys that can be pressed multiple times
         keys_pressed=pygame.key.get_pressed()
@@ -123,11 +139,6 @@ def run_editor():
             OFFSET_HORIZONTAL = 0
             OFFSET_VERTICAL = 0
             SCALE = 1
-        # add segment
-        if keys_pressed[pygame.K_1]:
-            new_segment_on = True
-            temp_segment = [0,0,0,0,0]
-            print("Please select first point")
 
         # clear screen
         WIN.fill(BLACK)

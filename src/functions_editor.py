@@ -92,3 +92,31 @@ def add_segment(coord, temp_list, dict_with_segments):
         temp_list[0] = 0
         return False
     else: return True
+
+def add_switch(coord, temp_list, dict_with_track_switches, dict_with_segments):
+    if temp_list[0] == 0:
+        temp_list[1] = myround_point(coord)
+        print("Please select first segment")
+    elif temp_list[0] == 1:
+        segment_first = which_segment(dict_with_segments, coord, 5)
+        if not segment_first: segment_first = 9999
+        temp_list[2] = segment_first
+        print("Please select active segment")
+    elif temp_list[0] == 2:
+        segment_active = which_segment(dict_with_segments, coord, 5)
+        if not segment_active: segment_active = 9999
+        temp_list[3] = segment_active
+        print("Please select passive segment")
+    elif temp_list[0] == 3:
+        segment_passive = which_segment(dict_with_segments, coord, 5)
+        if not segment_passive: segment_passive = 9999
+        temp_list[4] = segment_passive
+        new_id = empty_slot(dict_with_track_switches.keys())
+        dict_with_track_switches[new_id] = Track_switch(new_id, *temp_list[1:])
+        print("New track switch " + str(new_id) + " has been added")
+
+    temp_list[0] += 1
+    if temp_list[0] >= 4:
+        temp_list[0] = 0
+        return False
+    else: return True
