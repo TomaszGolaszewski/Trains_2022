@@ -102,7 +102,7 @@ class Vehicle:
     def collision(self, dict_with_carriages):
     # check whether a collision occurs and...
         for carriage_id in dict_with_carriages:
-            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id:
+            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= self.body_radius + dict_with_carriages[carriage_id].body_radius + 1 and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id:
                 # ...break carriages
                 if abs(self.v_current) > 0.75:
                     self.state = "broken"
@@ -137,6 +137,9 @@ class Engine(Vehicle):
         Vehicle.__init__(self, id, coord, angle, segment)
         self.r = 0
         self.imgs = ENGINE_IMGS
+        temp_rect = ENGINE_IMGS.get_rect()
+        self.body_radius = temp_rect.width / 2
+
         self.state = "manual"
         self.fore_run_end = coord.copy()
         self.engine_id = id
@@ -242,6 +245,16 @@ class Carriage(Vehicle):
         Vehicle.__init__(self, id, coord, angle, segment)
         self.r = 1
         self.imgs = CARRIAGE_IMGS[random.randint(0,2)]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
 
     def accelerate(self):
         pass
+
+
+class Carriage_passenger(Vehicle):
+    def __init__(self, id, coord, angle, segment):
+        Carriage.__init__(self, id, coord, angle, segment)
+        self.imgs = CARRIAGE_PASSENGER_IMGS
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2

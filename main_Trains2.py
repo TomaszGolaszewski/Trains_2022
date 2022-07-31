@@ -71,9 +71,9 @@ def run():
                         if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                             DICT_WITH_SEMAPHORES[semaphore_id].change_light()
 
-                    # segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 3)
-                    # if segment: print(DICT_WITH_SEGMENTS[segment])
-                    #
+                    segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 2)
+                    if segment and segment != 9999: print(DICT_WITH_SEGMENTS[segment])
+
                     # print(str(pygame.mouse.get_pos()))
                 # 2 - middle click
                 # 3 - right click

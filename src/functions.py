@@ -172,19 +172,43 @@ def make_test_trains(dict_with_segments):
     id = 1
     dict = {}
     list_with_engines = []
+    number_of_cargo_trains = 4
+    number_of_passenger_trains = 3
 
-    for i in range(5):
+    # engines for cargo
+    for i in range(number_of_cargo_trains):
         # dict[id] = Engine(id, [230, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
-        dict[id] = Engine(id, [220 + random.randint(0,10), 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        # dict[id] = Engine(id, [220 + random.randint(0,10), 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+        new_coord = [10 + 25*i + random.randint(0,15), -80+10*i]
+        dict[id] = Engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
         dict[id].set_new_bar_orgin((1150,29*i))
         list_with_engines.append(id)
         id += 1
 
-    for i in range(5):
+    # engines for passangers
+    for i in range(number_of_passenger_trains):
+        new_coord = [190 + random.randint(0,10), 10+10*i]
+        dict[id] = Engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+        dict[id].set_new_bar_orgin((1150,29*(i+number_of_cargo_trains)))
+        list_with_engines.append(id)
+        id += 1
+
+    # carriages for cargo
+    for i in range(number_of_cargo_trains):
         offset = random.randint(0,10)
-        for j in range(10 + random.randint(0,3)):
+        for j in range(12 + random.randint(0,6)):
             # dict[id] = Carriage(id, [30+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
-            dict[id] = Carriage(id, [-80 + 22*j + offset , 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+            # dict[id] = Carriage(id, [-80 + 22*j + offset , 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
+            new_coord = [-420 + 25*i + 22*j + offset, -80+10*i]
+            dict[id] = Carriage(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            id += 1
+
+    # carriages for passengers
+    for i in range(number_of_passenger_trains):
+        offset = random.randint(0,10)
+        for j in range(5 + random.randint(0,2)):
+            new_coord = [-50 + 32*j + offset , 10+10*i]
+            dict[id] = Carriage_passenger(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
 
     return dict, list_with_engines
