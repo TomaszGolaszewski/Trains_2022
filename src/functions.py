@@ -172,8 +172,8 @@ def make_test_trains(dict_with_segments):
     id = 1
     dict = {}
     list_with_engines = []
-    number_of_cargo_trains = 4
-    number_of_passenger_trains = 3
+    number_of_cargo_trains = 5
+    number_of_passenger_trains = 4
 
     # engines for cargo
     for i in range(number_of_cargo_trains):

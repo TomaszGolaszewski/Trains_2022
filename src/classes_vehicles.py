@@ -102,7 +102,7 @@ class Vehicle:
     def collision(self, dict_with_carriages):
     # check whether a collision occurs and...
         for carriage_id in dict_with_carriages:
-            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= self.body_radius + dict_with_carriages[carriage_id].body_radius + 1 and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id:
+            if self.id != carriage_id and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= self.body_radius + dict_with_carriages[carriage_id].body_radius + 1:
                 # ...break carriages
                 if abs(self.v_current) > 0.75:
                     self.state = "broken"
@@ -121,7 +121,7 @@ class Vehicle:
     def is_collision(self, dict_with_carriages):
     # check whether a collision occurs
         for carriage_id in dict_with_carriages:
-            if self.id != carriage_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id:
+            if self.id != carriage_id and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id and dist_two_points(self.coord, dict_with_carriages[carriage_id].coord) <= Vehicle.body_radius:
                 return True
         return False
 
