@@ -90,7 +90,7 @@ class Semaphore:
         self.bottom_light = "red"
 
     def save(self):
-        return str(self.number) + "\t" + str(self.light_coord[0]) + "\t" + str(self.light_coord[1]) + "\t" + str(self.sensor_coord[0]) + "\t" + str(self.sensor_coord[1]) + "\n"
+        return str(self.number) + "\t" + str(self.light_coord[0]) + "\t" + str(self.light_coord[1]) + "\t" + str(self.sensor_coord[0]) + "\t" + str(self.sensor_coord[1]) + "\t" + str(int(math.degrees(self.direction))) + "\n"
 
     def is_pressed(self, click):
     # check if the light button is pressed
