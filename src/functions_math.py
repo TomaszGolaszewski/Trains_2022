@@ -14,6 +14,10 @@ def move_point_back(point, offset_x, offset_y, scale = 1):
     # new_point = (point[0] + OFFSET_HORIZONTAL, point[1] + OFFSET_VERTICAL)
     return (point[0]/scale - offset_x, point[1]/scale - offset_y)
 
+def move_point_by_angle(point, offset, angle):
+# function that change coordinates of point by angle and offset
+    return (point[0] + offset * math.cos(angle), point[1] + offset * math.sin(angle))
+
 def dist_two_points(point1, point2):
 # function that calculate distance between two points
     return math.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)

@@ -14,4 +14,4 @@ no.	x	y	one segment		active segment		passive segment		point
 
 
 semaphores
-no.	x light		y light		x sensor	y sensor
+no.	x light		y light		x sensor	y sensor	direction

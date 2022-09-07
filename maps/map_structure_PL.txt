@@ -14,4 +14,4 @@ lp.	x	y	jedyny odcinek		aktywny odcinek		pasywny odcinek		punkt
 
 
 semafory
-lp.	x światła	y światła	x czujnika	y czujnika
+lp.	x światła	y światła	x czujnika	y czujnika	kąt

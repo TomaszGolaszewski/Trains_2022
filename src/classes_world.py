@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from settings import *
 from functions_math import *
@@ -71,7 +72,7 @@ class Track_switch:
 
 
 class Semaphore:
-    def __init__(self, number, light_coord, sensor_coord):
+    def __init__(self, number, light_coord, sensor_coord, angle):
         self.number = number
         self.light_coord = light_coord
         self.sensor_coord = sensor_coord
@@ -81,6 +82,13 @@ class Semaphore:
         self.light_on = False
         self.sensor_on = False
 
+        self.direction = math.radians(angle) # direction in radians, angle in degrees
+        self.top_light_coord = move_point_by_angle(light_coord, 5, self.direction)
+        self.bottom_light_coord = light_coord
+        self.base_coord = move_point_by_angle(light_coord, -5, self.direction)
+        self.top_light = "yellow"
+        self.bottom_light = "red"
+
     def save(self):
         return str(self.number) + "\t" + str(self.light_coord[0]) + "\t" + str(self.light_coord[1]) + "\t" + str(self.sensor_coord[0]) + "\t" + str(self.sensor_coord[1]) + "\n"
 
@@ -88,17 +96,41 @@ class Semaphore:
     # check if the light button is pressed
         return dist_two_points(self.light_coord, click) < 5
 
+    def logic(self):
+    # check state of all lights and decide if it is safe to let the train run
+        if self.top_light == "red" or self.bottom_light == "red":
+            self.light = "red"
+        elif self.top_light == "green" and self.bottom_light == "green":
+            self.light = "green"
+        else:
+            self.light = "yellow"
+
     def change_light(self):
     # change color of the light
-        if self.light == "red": self.light = "green"
-        elif self.light == "green": self.light = "red"
+        if self.bottom_light == "red": self.bottom_light = "green"
+        elif self.bottom_light == "green": self.bottom_light = "red"
+
+        self.logic()
 
     def draw(self, win, offset_x, offset_y, scale):
+        # draw base
+        # pygame.draw.circle(win, WHITE, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, 1)
         if self.light == "green": color = GREEN
         elif self.light == "yellow": color = YELLOW
         else: color = RED
-        pygame.draw.circle(win, WHITE, move_point(self.sensor_coord, offset_x, offset_y, scale), 4*scale, 1)
-        pygame.draw.circle(win, color, move_point(self.light_coord, offset_x, offset_y, scale), 4*scale, 0)
+        pygame.draw.circle(win, color, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, 1)
+
+        # draw bottom light
+        if self.bottom_light == "green": color = GREEN
+        elif self.bottom_light == "yellow": color = YELLOW
+        else: color = RED
+        pygame.draw.circle(win, color, move_point(self.bottom_light_coord, offset_x, offset_y, scale), 4*scale, 0)
+
+        # draw top light
+        if self.top_light == "green": color = GREEN
+        elif self.top_light == "yellow": color = YELLOW
+        else: color = RED
+        pygame.draw.circle(win, color, move_point(self.top_light_coord, offset_x, offset_y, scale), 4*scale, 0)
 
     def reset(self):
         self.light_used = False
