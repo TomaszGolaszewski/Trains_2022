@@ -147,6 +147,8 @@ def run():
 
         # draw semaphores
         for semaphore in DICT_WITH_SEMAPHORES:
+            if not CURRENT_FRAME % 30: DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES)
+            # pygame.draw.line(WIN, YELLOW, move_point(DICT_WITH_SEMAPHORES[semaphore].light_coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_SEMAPHORES[semaphore].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
             DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface

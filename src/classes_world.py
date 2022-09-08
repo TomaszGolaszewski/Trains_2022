@@ -3,6 +3,7 @@ import math
 
 from settings import *
 from functions_math import *
+from classes_vehicles import Engine
 
 class Point:
     def __init__(self, number, coord, segment1, segment2):
@@ -72,7 +73,7 @@ class Track_switch:
 
 
 class Semaphore:
-    def __init__(self, number, light_coord, sensor_coord, angle):
+    def __init__(self, number, light_coord, sensor_coord, angle, segment):
         self.number = number
         self.light_coord = light_coord
         self.sensor_coord = sensor_coord
@@ -88,6 +89,9 @@ class Semaphore:
         self.base_coord = move_point_by_angle(light_coord, -5, self.direction)
         self.top_light = "yellow"
         self.bottom_light = "red"
+
+        self.segment = segment
+        self.fore_run_end = light_coord
 
     def save(self):
         return str(self.number) + "\t" + str(self.light_coord[0]) + "\t" + str(self.light_coord[1]) + "\t" + str(self.sensor_coord[0]) + "\t" + str(self.sensor_coord[1]) + "\t" + str(int(math.degrees(self.direction))) + "\n"
@@ -156,3 +160,35 @@ class Semaphore:
                     self.sensor_on = True # train is moving from front
                 self.sensor_used = True
         return False
+
+    def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
+    # function that checkes if the track in front of the train is free
+        max_steps = 1000
+        stop = False
+
+        # make test engine
+        ghost_engine = Engine(0, self.light_coord.copy(), self.direction, self.segment)
+        # set speed of the test engine
+        ghost_engine.v_current = 5
+        # run fore-run
+        for step in range(max_steps+1):
+            ghost_engine.move(dict_with_segments)
+            if ghost_engine.is_collision(dict_with_carriages):
+                self.top_light = "red"
+                break
+            if ghost_engine.state == "broken":
+                self.top_light = "red"
+                break
+            for semaphore_id in dict_with_semaphores:
+                if (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 3:
+                    stop = True
+                    break
+            if stop:
+                self.top_light = "green"
+                break
+
+        if step == max_steps:
+            self.top_light = "yellow"
+
+        self.fore_run_end = ghost_engine.coord.copy()
+        self.logic()
