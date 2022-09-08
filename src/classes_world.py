@@ -87,7 +87,7 @@ class Semaphore:
         self.top_light_coord = move_point_by_angle(light_coord, 5, self.direction)
         self.bottom_light_coord = light_coord
         self.base_coord = move_point_by_angle(light_coord, -5, self.direction)
-        self.top_light = "yellow"
+        self.top_light = "red"
         self.bottom_light = "red"
 
         self.segment = segment
@@ -136,30 +136,30 @@ class Semaphore:
         else: color = RED
         pygame.draw.circle(win, color, move_point(self.top_light_coord, offset_x, offset_y, scale), 4*scale, 0)
 
-    def reset(self):
-        self.light_used = False
-        self.sensor_used = False
-        self.light_on = False
-        self.sensor_on = False
+    # def reset(self):
+    #     self.light_used = False
+    #     self.sensor_used = False
+    #     self.light_on = False
+    #     self.sensor_on = False
 
-    def stop_train(self, position):
-        if self.light == "red":
-            if dist_two_points(self.light_coord, position) < 3 and not self.light_used:
-                if self.sensor_on:
-                    self.sensor_on = False
-                    self.light_used = True
-                    return True # train has to stop
-                else:
-                    self.light_on = True # train is moving from behind
-                self.light_used = True
-
-            elif dist_two_points(self.sensor_coord, position) < 3 and not self.sensor_used:
-                if self.light_on:
-                    self.light_on = False # train is moving from behind
-                else:
-                    self.sensor_on = True # train is moving from front
-                self.sensor_used = True
-        return False
+    # def stop_train(self, position):
+    #     if self.light == "red":
+    #         if dist_two_points(self.light_coord, position) < 3 and not self.light_used:
+    #             if self.sensor_on:
+    #                 self.sensor_on = False
+    #                 self.light_used = True
+    #                 return True # train has to stop
+    #             else:
+    #                 self.light_on = True # train is moving from behind
+    #             self.light_used = True
+    #
+    #         elif dist_two_points(self.sensor_coord, position) < 3 and not self.sensor_used:
+    #             if self.light_on:
+    #                 self.light_on = False # train is moving from behind
+    #             else:
+    #                 self.sensor_on = True # train is moving from front
+    #             self.sensor_used = True
+    #     return False
 
     def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
     # function that checkes if the track in front of the train is free
@@ -169,7 +169,7 @@ class Semaphore:
         # make test engine
         ghost_engine = Engine(0, self.light_coord.copy(), self.direction, self.segment)
         # set speed of the test engine
-        ghost_engine.v_current = 5
+        ghost_engine.v_current = 10
         # run fore-run
         for step in range(max_steps+1):
             ghost_engine.move(dict_with_segments)
@@ -177,10 +177,14 @@ class Semaphore:
                 self.top_light = "red"
                 break
             if ghost_engine.state == "broken":
-                self.top_light = "red"
+                self.top_light = "yellow"
                 break
             for semaphore_id in dict_with_semaphores:
-                if (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 3:
+                if dict_with_semaphores[semaphore_id].segment == ghost_engine.segment \
+                and (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle \
+                or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi \
+                or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) \
+                and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 10:
                     stop = True
                     break
             if stop:

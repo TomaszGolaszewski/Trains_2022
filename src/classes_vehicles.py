@@ -224,12 +224,18 @@ class Engine(Vehicle):
             # if dict_with_segments[ghost_engine.segment].state == "passive": break
             if ghost_engine.state == "broken": break
             for semaphore_id in dict_with_semaphores:
-                if dict_with_semaphores[semaphore_id].stop_train(ghost_engine.coord):
+                # if dict_with_semaphores[semaphore_id].stop_train(ghost_engine.coord):
+                if dict_with_semaphores[semaphore_id].segment == ghost_engine.segment \
+                and dict_with_semaphores[semaphore_id].light == "red" \
+                and (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle \
+                or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi \
+                or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) \
+                and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 3:
                     stop = True
                     break
             if stop: break
 
-        for semaphore_id in dict_with_semaphores: dict_with_semaphores[semaphore_id].reset()
+        # for semaphore_id in dict_with_semaphores: dict_with_semaphores[semaphore_id].reset()
 
         # if the track is free - accelerate
         if step == max_steps:
