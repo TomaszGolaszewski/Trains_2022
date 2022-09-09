@@ -82,9 +82,9 @@ def add_segment(coord, temp_list, dict_with_segments):
                 dict_with_segments[temp_list[3]].segment2 = new_id
         if temp_list[4] != 9999:
             if dict_with_segments[temp_list[4]].segment1 == 9999 and dist_two_points(dict_with_segments[temp_list[4]].point1, temp_list[2]) < 1:
-                dict_with_segments[temp_list[3]].segment1 = new_id
+                dict_with_segments[temp_list[4]].segment1 = new_id
             if dict_with_segments[temp_list[4]].segment2 == 9999 and dist_two_points(dict_with_segments[temp_list[4]].point2, temp_list[2]) < 1:
-                dict_with_segments[temp_list[3]].segment2 = new_id
+                dict_with_segments[temp_list[4]].segment2 = new_id
         print("New segment " + str(new_id) + " has been added")
 
     temp_list[0] += 1
