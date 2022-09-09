@@ -71,7 +71,6 @@ class Track_switch:
         dict_with_segments[self.passive].state = "active"
         self.active, self.passive = self.passive, self.active
 
-
 class Semaphore:
     def __init__(self, number, light_coord, sensor_coord, angle, segment):
         self.number = number

@@ -98,17 +98,17 @@ def add_switch(coord, temp_list, dict_with_track_switches, dict_with_segments):
         temp_list[1] = myround_point(coord)
         print("Please select first segment")
     elif temp_list[0] == 1:
-        segment_first = which_segment(dict_with_segments, coord, 5)
+        segment_first = which_segment(dict_with_segments, coord, 3)
         if not segment_first: segment_first = 9999
         temp_list[2] = segment_first
         print("Please select active segment")
     elif temp_list[0] == 2:
-        segment_active = which_segment(dict_with_segments, coord, 5)
+        segment_active = which_segment(dict_with_segments, coord, 3)
         if not segment_active: segment_active = 9999
         temp_list[3] = segment_active
         print("Please select passive segment")
     elif temp_list[0] == 3:
-        segment_passive = which_segment(dict_with_segments, coord, 5)
+        segment_passive = which_segment(dict_with_segments, coord, 3)
         if not segment_passive: segment_passive = 9999
         temp_list[4] = segment_passive
         new_id = empty_slot(dict_with_track_switches.keys())
@@ -120,3 +120,56 @@ def add_switch(coord, temp_list, dict_with_track_switches, dict_with_segments):
         temp_list[0] = 0
         return False
     else: return True
+
+def del_switch(coord, dict_with_track_switches):
+    switches_to_del = []
+    for switch_id in dict_with_track_switches:
+        if dict_with_track_switches[switch_id].is_switch_pressed(coord):
+            switches_to_del.append(switch_id)
+    for switch_id in switches_to_del:
+        del dict_with_track_switches[switch_id]
+        print("Switch " + str(switch_id) + " has been deleted")
+
+    return False
+
+def del_segment(coord, dict_with_segments):
+    segment_to_del = which_segment(dict_with_segments, coord, 3)
+    del dict_with_segments[segment_to_del]
+    print("Segment " + str(segment_to_del) + " has been deleted")
+
+    return False
+
+def move_end_of_segment(coord, temp_list, dict_with_segments):
+    offset = 5
+
+    if temp_list[0] == 0:
+        segment_to_move = which_segment(dict_with_segments, coord, offset)
+        temp_list[1] = segment_to_move
+        if dist_two_points(dict_with_segments[segment_to_move].point1, coord) < offset and dict_with_segments[segment_to_move].segment1 == 9999:
+            temp_list[2] = 1
+        elif dist_two_points(dict_with_segments[segment_to_move].point2, coord) < offset and dict_with_segments[segment_to_move].segment2 == 9999:
+            temp_list[2] = 2
+        print("Please select new position")
+    elif temp_list[0] == 1:
+        new_pos = myround_point(coord)
+        if temp_list[2] == 1:
+            dict_with_segments[temp_list[1]].point1 = new_pos
+        elif temp_list[2] == 2:
+            dict_with_segments[temp_list[1]].point2 = new_pos
+
+    temp_list[0] += 1
+    if temp_list[0] >= 2:
+        temp_list[0] = 0
+        return False
+    else: return True
+
+def add_end_of_segment(coord, dict_with_segments):
+    offset = 5
+    segment_to_end = which_segment(dict_with_segments, coord, offset)
+
+    if dist_two_points(dict_with_segments[segment_to_end].point1, coord) < offset:
+        dict_with_segments[segment_to_end].segment1 = 9999
+    elif dist_two_points(dict_with_segments[segment_to_end].point2, coord) < offset:
+        dict_with_segments[segment_to_end].segment2 = 9999
+
+    return False

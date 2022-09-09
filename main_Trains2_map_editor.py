@@ -43,8 +43,14 @@ def run_editor():
     # resources for editor
     new_segment_on = False
     temp_segment = [0,0,0,0,0]
+    del_segment_on = False
     new_switch_on = False
     temp_switch = [0,0,0,0,0]
+    del_switch_on = False
+
+    move_segment_on = False
+    temp_move_segment = [0,0,0]
+    add_end_of_segment_on = False
 
     # main loop
     running = True
@@ -68,8 +74,17 @@ def run_editor():
                 if event.button == 1:
                     if new_segment_on:
                         new_segment_on = add_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_segment, DICT_WITH_SEGMENTS)
+                    if del_segment_on:
+                        del_segment_on = del_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), DICT_WITH_SEGMENTS)
                     if new_switch_on:
                         new_switch_on = add_switch(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_switch, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEGMENTS)
+                    if del_switch_on:
+                        del_switch_on = del_switch(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), DICT_WITH_TRACK_SWITCHES)
+
+                    if move_segment_on:
+                        move_segment_on = move_end_of_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_move_segment, DICT_WITH_SEGMENTS)
+                    if add_end_of_segment_on:
+                        add_end_of_segment_on = add_end_of_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), DICT_WITH_SEGMENTS)
 
                     # for engine_id in LIST_WITH_ENGINES:
                     #     if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
@@ -114,11 +129,29 @@ def run_editor():
                     new_segment_on = True
                     temp_segment = [0,0,0,0,0]
                     print("Please select first point")
+                # del segment
+                if event.key == pygame.K_2:
+                    del_segment_on = True
+                    print("Please select segment to delete")
                 # add track switch
                 if event.key == pygame.K_3:
                     new_switch_on = True
                     temp_switch = [0,0,0,0,0]
                     print("Please select button")
+                # del track switch
+                if event.key == pygame.K_4:
+                    del_switch_on = True
+                    print("Please select button to delete")
+
+                # move end of segment
+                if event.key == pygame.K_9:
+                    move_segment_on = True
+                    temp_move_segment = [0,0,0]
+                    print("Please select end of segment to move")
+                # add end of segment
+                if event.key == pygame.K_0:
+                    add_end_of_segment_on = True
+                    print("Please select segment to end")
 
         # keys that can be pressed multiple times
         keys_pressed=pygame.key.get_pressed()
