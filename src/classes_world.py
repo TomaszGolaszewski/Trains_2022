@@ -163,13 +163,13 @@ class Semaphore:
 
     def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
     # function that checkes if the track in front of the train is free
-        max_steps = 1000
+        max_steps = 200
         stop = False
 
         # make test engine
         ghost_engine = Engine(0, self.light_coord.copy(), self.direction, self.segment)
         # set speed of the test engine
-        ghost_engine.v_current = 10
+        ghost_engine.v_current = 15
         # run fore-run
         for step in range(max_steps+1):
             ghost_engine.move(dict_with_segments)

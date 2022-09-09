@@ -208,14 +208,15 @@ class Engine(Vehicle):
 
     def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
     # function that checkes if the track in front of the train is free
-        max_steps = 150
-        min_v_fore_run = 0.3
+        max_steps = 70 # 150
+        min_v_fore_run = 0.5 # 0.3
+        # max_v = 10
         stop = False
 
         # make test engine
         ghost_engine = Engine(self.id, self.coord.copy(), self.angle, self.segment)
         # set speed of the test engine
-        if self.v_current > min_v_fore_run: ghost_engine.v_current = self.v_current
+        if self.v_current > min_v_fore_run: ghost_engine.v_current = 2 * self.v_current
         else: ghost_engine.v_current = min_v_fore_run
         # run fore-run
         for step in range(max_steps+1):
@@ -230,7 +231,7 @@ class Engine(Vehicle):
                 and (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle \
                 or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi \
                 or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) \
-                and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 3:
+                and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 10:
                     stop = True
                     break
             if stop: break
