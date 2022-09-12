@@ -135,31 +135,6 @@ class Semaphore:
         else: color = RED
         pygame.draw.circle(win, color, move_point(self.top_light_coord, offset_x, offset_y, scale), 4*scale, 0)
 
-    # def reset(self):
-    #     self.light_used = False
-    #     self.sensor_used = False
-    #     self.light_on = False
-    #     self.sensor_on = False
-
-    # def stop_train(self, position):
-    #     if self.light == "red":
-    #         if dist_two_points(self.light_coord, position) < 3 and not self.light_used:
-    #             if self.sensor_on:
-    #                 self.sensor_on = False
-    #                 self.light_used = True
-    #                 return True # train has to stop
-    #             else:
-    #                 self.light_on = True # train is moving from behind
-    #             self.light_used = True
-    #
-    #         elif dist_two_points(self.sensor_coord, position) < 3 and not self.sensor_used:
-    #             if self.light_on:
-    #                 self.light_on = False # train is moving from behind
-    #             else:
-    #                 self.sensor_on = True # train is moving from front
-    #             self.sensor_used = True
-    #     return False
-
     def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
     # function that checkes if the track in front of the train is free
         max_steps = 200

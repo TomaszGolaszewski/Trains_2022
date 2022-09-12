@@ -171,12 +171,18 @@ class Engine(Vehicle):
         # pygame.draw.rect(win, BLUE, self.bar_slower, 0)
         # pygame.draw.rect(win, RED, self.bar_faster, 0)
 
+        # draw engine indicator
+        rotated_image = pygame.transform.rotate(self.imgs, -math.degrees(self.angle))
+        new_rect = rotated_image.get_rect(center = self.bar_auto_button.center)
+        win.blit(rotated_image, new_rect.topleft)
+
         # draw state indicator
         if self.state == "manual": color = BLUE
         elif self.state == "stop": color = GREEN
         elif self.state == "move": color = YELLOW
         else: color = RED
-        pygame.draw.circle(win, color, self.bar_auto_button.center, 4, 0)
+        # pygame.draw.circle(win, color, self.bar_auto_button.center, 4, 0)
+        pygame.draw.circle(win, color, self.bar_auto_button.center, 2, 0)
 
         # draw velocity indicator
         # target velocity
