@@ -49,7 +49,7 @@ def run_editor():
     del_switch_on = False
 
     move_segment_on = False
-    temp_move_segment = [0,0,0]
+    temp_move_segment = [0,0]
     add_end_of_segment_on = False
 
     # main loop
@@ -146,8 +146,8 @@ def run_editor():
                 # move end of segment
                 if event.key == pygame.K_9:
                     move_segment_on = True
-                    temp_move_segment = [0,0,0]
-                    print("Please select end of segment to move")
+                    temp_move_segment = [0,0]
+                    print("Please select point to move")
                 # add end of segment
                 if event.key == pygame.K_0:
                     add_end_of_segment_on = True

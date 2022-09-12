@@ -75,7 +75,18 @@ def run():
                     if segment and segment != 9999: print(DICT_WITH_SEGMENTS[segment])
 
                     # print(str(pygame.mouse.get_pos()))
+
                 # 2 - middle click
+                if event.button == 2:
+                    new_view_center = move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+                    # mouse_pos = pygame.mouse.get_pos()
+                    OFFSET_HORIZONTAL = -new_view_center[0]
+                    OFFSET_VERTICAL = -new_view_center[1]
+                    # OFFSET_HORIZONTAL = (mouse_pos[0] - WIN_WIDTH/2) / SCALE - OFFSET_HORIZONTAL
+                    # OFFSET_VERTICAL = (mouse_pos[1] - WIN_HEIGHT/2) / SCALE - OFFSET_VERTICAL
+                    # OFFSET_HORIZONTAL = -(mouse_pos[0] - WIN_WIDTH/2)
+                    # OFFSET_VERTICAL = -(mouse_pos[1] - WIN_HEIGHT/2)
+                    pass
                 # 3 - right click
                 if event.button == 3:
                     for semaphore_id in DICT_WITH_SEMAPHORES:
@@ -83,8 +94,13 @@ def run():
                             DICT_WITH_SEMAPHORES[semaphore_id].change_auto()
                 # 4 - scroll up
                 if event.button == 4:
+                    # new_view_center = move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
                     SCALE += 1
                     if SCALE == 1.5: SCALE = 1
+                    if SCALE >= 5: SCALE = 5
+                    # new_view_center = move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+                    # OFFSET_HORIZONTAL += new_view_center[0]
+                    # OFFSET_VERTICAL += new_view_center[1]
                 # 5 - scroll down
                 if event.button == 5:
                     SCALE -= 1
@@ -158,6 +174,10 @@ def run():
         # draw interface
         for bar in LIST_WITH_ENGINES:
             DICT_WITH_CARRIAGES[bar].draw_bar(WIN)
+
+        # draw (0, 0)
+        pygame.draw.circle(WIN, RED, move_point((0, 0), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 10*SCALE, 1)
+        pygame.draw.circle(WIN, RED, move_point((0, 0), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 5*SCALE, 1)
 
         # flip the screen
         pygame.display.update()

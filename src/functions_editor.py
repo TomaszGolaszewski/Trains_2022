@@ -134,8 +134,16 @@ def del_switch(coord, dict_with_track_switches):
 
 def del_segment(coord, dict_with_segments):
     segment_to_del = which_segment(dict_with_segments, coord, 3)
+    point1 = dict_with_segments[segment_to_del].point1
+    segment1 = dict_with_segments[segment_to_del].segment1
+    point2 = dict_with_segments[segment_to_del].point2
+    segment2 = dict_with_segments[segment_to_del].segment2
+
     del dict_with_segments[segment_to_del]
     print("Segment " + str(segment_to_del) + " has been deleted")
+
+    if segment1 != 9999: add_end_of_segment(point1, dict_with_segments)
+    if segment2 != 9999: add_end_of_segment(point2, dict_with_segments)
 
     return False
 
@@ -143,19 +151,16 @@ def move_end_of_segment(coord, temp_list, dict_with_segments):
     offset = 5
 
     if temp_list[0] == 0:
-        segment_to_move = which_segment(dict_with_segments, coord, offset)
-        temp_list[1] = segment_to_move
-        if dist_two_points(dict_with_segments[segment_to_move].point1, coord) < offset and dict_with_segments[segment_to_move].segment1 == 9999:
-            temp_list[2] = 1
-        elif dist_two_points(dict_with_segments[segment_to_move].point2, coord) < offset and dict_with_segments[segment_to_move].segment2 == 9999:
-            temp_list[2] = 2
+        temp_list[1] = coord
         print("Please select new position")
     elif temp_list[0] == 1:
-        new_pos = myround_point(coord)
-        if temp_list[2] == 1:
-            dict_with_segments[temp_list[1]].point1 = new_pos
-        elif temp_list[2] == 2:
-            dict_with_segments[temp_list[1]].point2 = new_pos
+        for segment in dict_with_segments:
+            if dist_two_points(dict_with_segments[segment].point1, temp_list[1]) < offset:
+                dict_with_segments[segment].point1 = myround_point(coord)
+                print("Point 1 of segment: " + str(segment) + " has been moved")
+            if dist_two_points(dict_with_segments[segment].point2, temp_list[1]) < offset:
+                dict_with_segments[segment].point2 = myround_point(coord)
+                print("Point 2 of segment: " + str(segment) + " has been moved")
 
     temp_list[0] += 1
     if temp_list[0] >= 2:
