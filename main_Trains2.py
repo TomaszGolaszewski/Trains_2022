@@ -77,6 +77,10 @@ def run():
                     # print(str(pygame.mouse.get_pos()))
                 # 2 - middle click
                 # 3 - right click
+                if event.button == 3:
+                    for semaphore_id in DICT_WITH_SEMAPHORES:
+                        if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
+                            DICT_WITH_SEMAPHORES[semaphore_id].change_auto()
                 # 4 - scroll up
                 if event.button == 4:
                     SCALE += 1

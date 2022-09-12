@@ -154,9 +154,9 @@ class Engine(Vehicle):
         height = 30
         lenght = width - height - 10
         self.bar = pygame.Rect([*orgin, width, height])
-        self.bar_auto_button = pygame.Rect([*move_point(orgin, 10, 10), 10, 10])
-        self.bar_slower = pygame.Rect([self.bar_auto_button.right+10, self.bar_auto_button.top, lenght/2, 10])
-        self.bar_faster = pygame.Rect([*self.bar_slower.topright, lenght/2, 10])
+        self.bar_auto_button = pygame.Rect([*move_point(orgin, 5, 5), 20, 20])
+        self.bar_slower = pygame.Rect([self.bar_auto_button.right+10, self.bar_auto_button.top, lenght/2, 20])
+        self.bar_faster = pygame.Rect([*self.bar_slower.topright, lenght/2, 20])
 
     def draw_bar(self, win):
         width = self.bar.width

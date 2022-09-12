@@ -101,12 +101,14 @@ class Semaphore:
 
     def logic(self):
     # check state of all lights and decide if it is safe to let the train run
-        if self.top_light == "red" or self.bottom_light == "red":
-            self.light = "red"
-        elif self.top_light == "green" and self.bottom_light == "green":
-            self.light = "green"
+        if self.bottom_light == "off": self.light = self.top_light
         else:
-            self.light = "yellow"
+            if self.top_light == "red" or self.bottom_light == "red":
+                self.light = "red"
+            elif self.top_light == "green" and self.bottom_light == "green":
+                self.light = "green"
+            else:
+                self.light = "yellow"
 
     def change_light(self):
     # change color of the light
@@ -115,19 +117,30 @@ class Semaphore:
 
         self.logic()
 
+    def change_auto(self):
+    # change semaphore to auto mode
+        if self.bottom_light == "off": self.bottom_light = "red"
+        else: self.bottom_light = "off"
+
+        self.logic()
+
     def draw(self, win, offset_x, offset_y, scale):
         # draw base
-        # pygame.draw.circle(win, WHITE, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, 1)
-        if self.light == "green": color = GREEN
-        elif self.light == "yellow": color = YELLOW
-        else: color = RED
-        pygame.draw.circle(win, color, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, 1)
+        pygame.draw.circle(win, WHITE, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, 1)
+        # if self.light == "green": color = GREEN
+        # elif self.light == "yellow": color = YELLOW
+        # else: color = RED
+        # pygame.draw.circle(win, color, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, 1)
 
         # draw bottom light
+        radius = 0
         if self.bottom_light == "green": color = GREEN
         elif self.bottom_light == "yellow": color = YELLOW
+        elif self.bottom_light == "off":
+            color = WHITE
+            radius = 1
         else: color = RED
-        pygame.draw.circle(win, color, move_point(self.bottom_light_coord, offset_x, offset_y, scale), 4*scale, 0)
+        pygame.draw.circle(win, color, move_point(self.bottom_light_coord, offset_x, offset_y, scale), 4*scale, radius)
 
         # draw top light
         if self.top_light == "green": color = GREEN
