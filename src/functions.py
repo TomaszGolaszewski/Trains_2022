@@ -172,8 +172,10 @@ def make_test_trains(dict_with_segments):
     id = 1
     dict = {}
     list_with_engines = []
-    number_of_cargo_trains = 5
-    number_of_passenger_trains = 5
+    number_of_cargo_trains = 4
+    number_of_passenger_trains = 3
+    number_of_multiple_units_tracks = 3
+    number_of_multiple_units_one_track = 3
 
     # engines for cargo
     for i in range(number_of_cargo_trains):
@@ -209,6 +211,32 @@ def make_test_trains(dict_with_segments):
         for j in range(5 + random.randint(0,2)):
             new_coord = [-50 + 32*j + offset , 10+10*i]
             dict[id] = Carriage_passenger(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            id += 1
+
+    # multiple units
+    for i in range(number_of_multiple_units_tracks):
+        for j in range(number_of_multiple_units_one_track):
+            offset = random.randint(0,10)
+            # engines
+            new_coord = [200 - 25*i- 180*j + offset , -10-10*i]
+            dict[id] = Multiple_unit1_engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            dict[id].set_new_bar_orgin((1150,29*(len(list_with_engines))))
+            list_with_engines.append(id)
+            id += 1
+
+            # carriages 1
+            new_coord = [200 - 32 - 25*i - 180*j + offset , -10-10*i] # 32j
+            dict[id] = Multiple_unit1_carriage(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            id += 1
+
+            # carriages 2
+            new_coord = [200 - 32*2 - 25*i - 180*j + offset , -10-10*i] # 32j
+            dict[id] = Multiple_unit1_carriage(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            id += 1
+
+            # end
+            new_coord = [200 - 32*3 - 25*i - 180*j + offset , -10-10*i] # 32j
+            dict[id] = Multiple_unit1_end(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
 
     return dict, list_with_engines

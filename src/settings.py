@@ -26,3 +26,7 @@ CARRIAGE_IMGS = [
     pygame.image.load(os.path.join("imgs","carriage1_container_green.png")),
     pygame.image.load(os.path.join("imgs","carriage1_container_blue.png"))]
 CARRIAGE_PASSENGER_IMGS = pygame.image.load(os.path.join("imgs","carriage_passenger.png"))
+MULTIPLE_UNIT_1_IMGS = [
+    pygame.image.load(os.path.join("imgs","multiple_unit1_engine.png")),
+    pygame.image.load(os.path.join("imgs","multiple_unit1_carriage.png")),
+    pygame.image.load(os.path.join("imgs","multiple_unit1_end.png"))]

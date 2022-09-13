@@ -254,6 +254,14 @@ class Engine(Vehicle):
             if self.v_target <= 0: self.v_target = 0
         self.fore_run_end = ghost_engine.coord.copy()
 
+
+class Multiple_unit1_engine(Engine):
+    def __init__(self, id, coord, angle, segment):
+        Engine.__init__(self, id, coord, angle, segment)
+        self.imgs = MULTIPLE_UNIT_1_IMGS[0]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
 class Carriage(Vehicle):
     def __init__(self, id, coord, angle, segment):
         Vehicle.__init__(self, id, coord, angle, segment)
@@ -266,9 +274,23 @@ class Carriage(Vehicle):
         pass
 
 
-class Carriage_passenger(Vehicle):
+class Carriage_passenger(Carriage):
     def __init__(self, id, coord, angle, segment):
         Carriage.__init__(self, id, coord, angle, segment)
         self.imgs = CARRIAGE_PASSENGER_IMGS
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+class Multiple_unit1_carriage(Carriage):
+    def __init__(self, id, coord, angle, segment):
+        Carriage.__init__(self, id, coord, angle, segment)
+        self.imgs = MULTIPLE_UNIT_1_IMGS[1]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+class Multiple_unit1_end(Carriage):
+    def __init__(self, id, coord, angle, segment):
+        Carriage.__init__(self, id, coord, angle, segment)
+        self.imgs = MULTIPLE_UNIT_1_IMGS[2]
         temp_rect = self.imgs.get_rect()
         self.body_radius = temp_rect.width / 2

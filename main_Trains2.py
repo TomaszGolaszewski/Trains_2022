@@ -118,18 +118,20 @@ def run():
 
         # keys that can be pressed multiple times
         keys_pressed=pygame.key.get_pressed()
+        # move
+        move_speed = 10 / SCALE
         # move left
         if keys_pressed[pygame.K_LEFT] or keys_pressed[pygame.K_a]:
-            OFFSET_HORIZONTAL += 5
+            OFFSET_HORIZONTAL += move_speed
         # move right
         if keys_pressed[pygame.K_RIGHT] or keys_pressed[pygame.K_d]:
-            OFFSET_HORIZONTAL -= 5
+            OFFSET_HORIZONTAL -= move_speed
         # move up
         if keys_pressed[pygame.K_UP] or keys_pressed[pygame.K_w]:
-            OFFSET_VERTICAL += 5
+            OFFSET_VERTICAL += move_speed
         # move down
         if keys_pressed[pygame.K_DOWN] or keys_pressed[pygame.K_s]:
-            OFFSET_VERTICAL -= 5
+            OFFSET_VERTICAL -= move_speed
         # center
         if keys_pressed[pygame.K_c]:
             OFFSET_HORIZONTAL = 0
