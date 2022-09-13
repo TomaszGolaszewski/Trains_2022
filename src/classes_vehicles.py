@@ -35,7 +35,7 @@ class Vehicle:
         # pygame.draw.rect(win, LIGHTSLATEGRAY, body)
 
         # draw body
-        if scale >= 1:
+        if scale >= 0.75:
             body = self.imgs.get_rect()
             scaled_image = pygame.transform.scale(self.imgs, (scale*body.width, scale*body.height))
             rotated_image = pygame.transform.rotate(scaled_image, -math.degrees(self.angle))
