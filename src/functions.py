@@ -225,19 +225,37 @@ def make_test_trains(dict_with_segments):
             id += 1
 
             # carriages 1
-            new_coord = [200 - 32 - 25*i - 180*j + offset , -10-10*i] # 32j
+            new_coord = [200 - 32 - 25*i - 180*j + offset , -10-10*i]
             dict[id] = Multiple_unit1_carriage(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
 
             # carriages 2
-            new_coord = [200 - 32*2 - 25*i - 180*j + offset , -10-10*i] # 32j
+            new_coord = [200 - 32*2 - 25*i - 180*j + offset , -10-10*i]
             dict[id] = Multiple_unit1_carriage(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
 
             # end
-            new_coord = [200 - 32*3 - 25*i - 180*j + offset , -10-10*i] # 32j
+            new_coord = [200 - 32*3 - 25*i - 180*j + offset , -10-10*i]
             dict[id] = Multiple_unit1_end(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
+
+    # EN57
+    # engine
+    new_coord = [190, 50]
+    dict[id] = EN57_engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+    dict[id].set_new_bar_orgin((1150,29*(len(list_with_engines))))
+    list_with_engines.append(id)
+    id += 1
+
+    # carriage
+    new_coord = [190 - 32, 50]
+    dict[id] = EN57_carriage(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+    id += 1
+
+    # end
+    new_coord = [190 - 32*2, 50]
+    dict[id] = EN57_end(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+    id += 1
 
     return dict, list_with_engines
 

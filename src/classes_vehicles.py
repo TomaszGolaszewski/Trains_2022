@@ -33,14 +33,19 @@ class Vehicle:
         # body = pygame.Rect(self.coord, (scale*Vehicle.lenght, scale*Vehicle.width))
         # body.center = move_point(self.coord, offset_x, offset_y, scale)
         # pygame.draw.rect(win, LIGHTSLATEGRAY, body)
-        body = self.imgs.get_rect()
-        scaled_image = pygame.transform.scale(self.imgs, (scale*body.width, scale*body.height))
-        rotated_image = pygame.transform.rotate(scaled_image, -math.degrees(self.angle))
-        new_rect = rotated_image.get_rect(center = move_point(self.coord, offset_x, offset_y, scale))
-        win.blit(rotated_image, new_rect.topleft)
+
+        # draw body
+        if scale >= 1:
+            body = self.imgs.get_rect()
+            scaled_image = pygame.transform.scale(self.imgs, (scale*body.width, scale*body.height))
+            rotated_image = pygame.transform.rotate(scaled_image, -math.degrees(self.angle))
+            new_rect = rotated_image.get_rect(center = move_point(self.coord, offset_x, offset_y, scale))
+            win.blit(rotated_image, new_rect.topleft)
 
         # draw state indicator
-        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), 2*scale, int(self.engine_id == 0))
+        if scale < 1: indicator_size = 3
+        else: indicator_size = 2*scale
+        pygame.draw.circle(win, color, move_point(self.coord, offset_x, offset_y, scale), indicator_size , int(self.engine_id == 0))
 
         # draw angle indicator
         # if not self.r: pygame.draw.line(win, BLACK, move_point(self.coord, offset_x, offset_y, scale), move_point(self.coord, offset_x + 8*math.cos(self.angle), offset_y + 8*math.sin(self.angle), scale), 1)
@@ -171,17 +176,19 @@ class Engine(Vehicle):
         # pygame.draw.rect(win, BLUE, self.bar_slower, 0)
         # pygame.draw.rect(win, RED, self.bar_faster, 0)
 
+        # draw state indicator bottom
+        if self.state == "manual": color = BLUE
+        elif self.state == "stop": color = GREEN
+        elif self.state == "move": color = YELLOW
+        else: color = RED
+        pygame.draw.circle(win, color, self.bar_auto_button.center, 10, 0)
+
         # draw engine indicator
         rotated_image = pygame.transform.rotate(self.imgs, -math.degrees(self.angle))
         new_rect = rotated_image.get_rect(center = self.bar_auto_button.center)
         win.blit(rotated_image, new_rect.topleft)
 
-        # draw state indicator
-        if self.state == "manual": color = BLUE
-        elif self.state == "stop": color = GREEN
-        elif self.state == "move": color = YELLOW
-        else: color = RED
-        # pygame.draw.circle(win, color, self.bar_auto_button.center, 4, 0)
+        # draw state indicator top
         pygame.draw.circle(win, color, self.bar_auto_button.center, 2, 0)
 
         # draw velocity indicator
@@ -202,7 +209,9 @@ class Engine(Vehicle):
     def press_bar(self, click):
         if self.bar_auto_button.collidepoint(click):
             if self.state == "manual": self.state = "stop"
-            elif self.state == "stop" or self.state == "move": self.state = "manual"
+            elif self.state == "stop" or self.state == "move":
+                self.state = "manual"
+                self.v_target = 0
         if self.bar_faster.collidepoint(click):
             if self.state == "manual":
                 self.v_target += 0.5
@@ -262,6 +271,14 @@ class Multiple_unit1_engine(Engine):
         temp_rect = self.imgs.get_rect()
         self.body_radius = temp_rect.width / 2
 
+class EN57_engine(Multiple_unit1_engine):
+    def __init__(self, id, coord, angle, segment):
+        Multiple_unit1_engine.__init__(self, id, coord, angle, segment)
+        self.imgs = EN57_IMGS[0]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+
 class Carriage(Vehicle):
     def __init__(self, id, coord, angle, segment):
         Vehicle.__init__(self, id, coord, angle, segment)
@@ -272,7 +289,6 @@ class Carriage(Vehicle):
 
     def accelerate(self):
         pass
-
 
 class Carriage_passenger(Carriage):
     def __init__(self, id, coord, angle, segment):
@@ -292,5 +308,19 @@ class Multiple_unit1_end(Carriage):
     def __init__(self, id, coord, angle, segment):
         Carriage.__init__(self, id, coord, angle, segment)
         self.imgs = MULTIPLE_UNIT_1_IMGS[2]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+class EN57_carriage(Multiple_unit1_carriage):
+    def __init__(self, id, coord, angle, segment):
+        Multiple_unit1_carriage.__init__(self, id, coord, angle, segment)
+        self.imgs = EN57_IMGS[1]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+class EN57_end(Multiple_unit1_end):
+    def __init__(self, id, coord, angle, segment):
+        Multiple_unit1_end.__init__(self, id, coord, angle, segment)
+        self.imgs = EN57_IMGS[2]
         temp_rect = self.imgs.get_rect()
         self.body_radius = temp_rect.width / 2

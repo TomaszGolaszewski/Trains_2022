@@ -30,3 +30,7 @@ MULTIPLE_UNIT_1_IMGS = [
     pygame.image.load(os.path.join("imgs","multiple_unit1_engine.png")),
     pygame.image.load(os.path.join("imgs","multiple_unit1_carriage.png")),
     pygame.image.load(os.path.join("imgs","multiple_unit1_end.png"))]
+EN57_IMGS = [
+    pygame.image.load(os.path.join("imgs","EN57_engine.png")),
+    pygame.image.load(os.path.join("imgs","EN57_carriage.png")),
+    pygame.image.load(os.path.join("imgs","EN57_end.png"))]

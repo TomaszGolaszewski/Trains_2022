@@ -97,14 +97,17 @@ def run():
                     # new_view_center = move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
                     SCALE += 1
                     if SCALE == 1.5: SCALE = 1
-                    if SCALE >= 5: SCALE = 5
+                    elif SCALE == 1.25: SCALE = 0.5
+                    elif SCALE >= 5: SCALE = 5
                     # new_view_center = move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
                     # OFFSET_HORIZONTAL += new_view_center[0]
                     # OFFSET_VERTICAL += new_view_center[1]
                 # 5 - scroll down
                 if event.button == 5:
                     SCALE -= 1
-                    if SCALE <= 0: SCALE = 0.5
+                    if SCALE == 0: SCALE = 0.5
+                    elif SCALE == -0.5: SCALE = 0.25
+                    elif SCALE <= 0: SCALE = 0.25
                   # pos = pygame.mouse.get_pos()
 
 
