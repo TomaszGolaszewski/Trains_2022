@@ -43,6 +43,11 @@ def run():
 
     center_mark = 100 # center mark radius counter
 
+
+    # panels for test
+    bar1 = Control_panel(1, (1150, 600))
+    bar2 = Control_panel(1, (WIN_WIDTH, 629))
+
     # main loop
     running = True
     while running:
@@ -204,6 +209,9 @@ def run():
         # draw interface
         for bar in LIST_WITH_ENGINES:
             DICT_WITH_CARRIAGES[bar].draw_bar(WIN)
+
+        bar1.draw(WIN, DICT_WITH_CARRIAGES[bar1.id])
+        bar2.draw(WIN, DICT_WITH_CARRIAGES[bar2.id])
 
         # draw center mark
         if center_mark < 50:
