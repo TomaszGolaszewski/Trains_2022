@@ -273,13 +273,11 @@ class Steam_locomotive(Engine):
 
         self.chimney = 10
         self.smoke = []
-        # self.smoke = [[[*self.chimney], 50, 5]]
 
     def draw(self, win, offset_x, offset_y, scale):
         Engine.draw(self, win, offset_x, offset_y, scale)
 
         # make new cloud in the smoke
-        # if self.smoke[0][1] > 6*(5 - int(math.fabs(self.v_current))):
         if len(self.smoke) < 6 * math.fabs(self.v_current) + 1:
             self.smoke.append([[self.coord[0] + self.chimney * math.cos(self.angle), self.coord[1] + self.chimney * math.sin(self.angle)], 0, random.randint(0,1)]) # ..., frame, color)
             # 0 - coord
@@ -305,7 +303,6 @@ class Steam_locomotive(Engine):
         if len(self.smoke):
             if self.smoke[0][1] > 35:
                 self.smoke.pop(0)
-
 
 
 class Multiple_unit1_engine(Engine):
@@ -338,6 +335,13 @@ class Carriage_passenger(Carriage):
     def __init__(self, id, coord, angle, segment):
         Carriage.__init__(self, id, coord, angle, segment)
         self.imgs = CARRIAGE_PASSENGER_IMGS
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+class Carriage_oldtimer(Carriage):
+    def __init__(self, id, coord, angle, segment):
+        Carriage.__init__(self, id, coord, angle, segment)
+        self.imgs = CARRIAGE_PASSENGER_OLDTIMER_IMGS
         temp_rect = self.imgs.get_rect()
         self.body_radius = temp_rect.width / 2
 

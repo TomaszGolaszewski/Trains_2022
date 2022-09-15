@@ -206,11 +206,14 @@ def make_test_trains(dict_with_segments):
             id += 1
 
     # carriages for passengers
-    for i in range(number_of_passenger_trains):
+    for i in range(number_of_passenger_trains+1):
         offset = random.randint(0,10)
         for j in range(5 + random.randint(0,2)):
             new_coord = [-50 + 32*j + offset , 10+10*i]
-            dict[id] = Carriage_passenger(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            if i == 3:
+                dict[id] = Carriage_oldtimer(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            else:
+                dict[id] = Carriage_passenger(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
 
     # multiple units
@@ -272,7 +275,7 @@ def make_test_trains(dict_with_segments):
     list_with_engines.append(id)
     id += 1
 
-    
+
     return dict, list_with_engines
 
 def draw_test_platforms(win, offset_x, offset_y, scale):
