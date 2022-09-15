@@ -239,6 +239,7 @@ def make_test_trains(dict_with_segments):
             dict[id] = Multiple_unit1_end(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
 
+
     # EN57
     # engine
     new_coord = [190, 50]
@@ -257,6 +258,21 @@ def make_test_trains(dict_with_segments):
     dict[id] = EN57_end(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
     id += 1
 
+
+    # steam locomotive
+    # tender
+    new_coord = [190 - 27, 40]
+    dict[id] = Steam_tender(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+    id += 1
+
+    # engine
+    new_coord = [190, 40]
+    dict[id] = Steam_locomotive(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+    dict[id].set_new_bar_orgin((1150,29*(len(list_with_engines))))
+    list_with_engines.append(id)
+    id += 1
+
+    
     return dict, list_with_engines
 
 def draw_test_platforms(win, offset_x, offset_y, scale):

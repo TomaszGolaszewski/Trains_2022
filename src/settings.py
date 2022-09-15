@@ -34,3 +34,6 @@ EN57_IMGS = [
     pygame.image.load(os.path.join("imgs","EN57_engine.png")),
     pygame.image.load(os.path.join("imgs","EN57_carriage.png")),
     pygame.image.load(os.path.join("imgs","EN57_end.png"))]
+STEAM_LOCOMOTIVE_1_IMGS = [
+    pygame.image.load(os.path.join("imgs","steam_locomotive.png")),
+    pygame.image.load(os.path.join("imgs","steam_tender.png"))]

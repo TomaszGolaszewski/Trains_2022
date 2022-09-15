@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 from settings import *
 from functions_math import *
@@ -263,6 +264,49 @@ class Engine(Vehicle):
             if self.v_target <= 0: self.v_target = 0
         self.fore_run_end = ghost_engine.coord.copy()
 
+class Steam_locomotive(Engine):
+    def __init__(self, id, coord, angle, segment):
+        Engine.__init__(self, id, coord, angle, segment)
+        self.imgs = STEAM_LOCOMOTIVE_1_IMGS[0]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+        self.chimney = 10
+        self.smoke = []
+        # self.smoke = [[[*self.chimney], 50, 5]]
+
+    def draw(self, win, offset_x, offset_y, scale):
+        Engine.draw(self, win, offset_x, offset_y, scale)
+
+        # make new cloud in the smoke
+        # if self.smoke[0][1] > 6*(5 - int(math.fabs(self.v_current))):
+        if len(self.smoke) < 6 * math.fabs(self.v_current) + 1:
+            self.smoke.append([[self.coord[0] + self.chimney * math.cos(self.angle), self.coord[1] + self.chimney * math.sin(self.angle)], 0, random.randint(0,1)]) # ..., frame, color)
+            # 0 - coord
+            # 1 - frame
+            # 2 - color
+
+        for cloud in self.smoke:
+            # wind
+            cloud[0][0] += 1
+            cloud[0][1] += 1
+
+            # draw smoke
+            if scale >= 0.75:
+                if cloud[2] == 0: color = DARKSTEELGRAY
+                elif cloud[2] == 1: color = LIGHTSLATEGRAY
+                elif cloud[2] == 2: color = GRAY
+                elif cloud[2] == 3: color = SILVER
+                else: color = RED
+                pygame.draw.circle(win, color, move_point(cloud[0], offset_x, offset_y, scale), 5*scale , 0)
+            cloud[1] += 1
+
+        # delete last cloud from the smoke
+        if len(self.smoke):
+            if self.smoke[0][1] > 35:
+                self.smoke.pop(0)
+
+
 
 class Multiple_unit1_engine(Engine):
     def __init__(self, id, coord, angle, segment):
@@ -322,5 +366,12 @@ class EN57_end(Multiple_unit1_end):
     def __init__(self, id, coord, angle, segment):
         Multiple_unit1_end.__init__(self, id, coord, angle, segment)
         self.imgs = EN57_IMGS[2]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+class Steam_tender(Carriage):
+    def __init__(self, id, coord, angle, segment):
+        Carriage.__init__(self, id, coord, angle, segment)
+        self.imgs = STEAM_LOCOMOTIVE_1_IMGS[1]
         temp_rect = self.imgs.get_rect()
         self.body_radius = temp_rect.width / 2
