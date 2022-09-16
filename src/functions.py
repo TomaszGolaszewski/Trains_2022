@@ -171,6 +171,7 @@ def load_from_file_v2():
 def make_test_trains(dict_with_segments):
     id = 1
     dict = {}
+    dict_panels = {}
     list_with_engines = []
     number_of_cargo_trains = 4
     number_of_passenger_trains = 3
@@ -183,7 +184,7 @@ def make_test_trains(dict_with_segments):
         # dict[id] = Engine(id, [220 + random.randint(0,10), 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
         new_coord = [10 + 25*i + random.randint(0,15), -80+10*i]
         dict[id] = Engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
-        dict[id].set_new_bar_orgin((1150,29*i))
+        dict_panels[id] = Control_panel(id, (WIN_WIDTH, 29*i))
         list_with_engines.append(id)
         id += 1
 
@@ -191,7 +192,7 @@ def make_test_trains(dict_with_segments):
     for i in range(number_of_passenger_trains):
         new_coord = [190 + random.randint(0,10), 10+10*i]
         dict[id] = Engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
-        dict[id].set_new_bar_orgin((1150,29*(i+number_of_cargo_trains)))
+        dict_panels[id] = Control_panel(id, (WIN_WIDTH, 29*(len(list_with_engines))))
         list_with_engines.append(id)
         id += 1
 
@@ -223,7 +224,7 @@ def make_test_trains(dict_with_segments):
             # engines
             new_coord = [200 - 25*i- 180*j + offset , -10-10*i]
             dict[id] = Multiple_unit1_engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
-            dict[id].set_new_bar_orgin((1150,29*(len(list_with_engines))))
+            dict_panels[id] = Control_panel(id, (WIN_WIDTH, 29*(len(list_with_engines))))
             list_with_engines.append(id)
             id += 1
 
@@ -247,7 +248,7 @@ def make_test_trains(dict_with_segments):
     # engine
     new_coord = [190, 50]
     dict[id] = EN57_engine(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
-    dict[id].set_new_bar_orgin((1150,29*(len(list_with_engines))))
+    dict_panels[id] = Control_panel(id, (WIN_WIDTH, 29*(len(list_with_engines))))
     list_with_engines.append(id)
     id += 1
 
@@ -264,19 +265,19 @@ def make_test_trains(dict_with_segments):
 
     # steam locomotive
     # tender
-    new_coord = [190 - 27, 40]
+    new_coord = [220 - 27, 40]
     dict[id] = Steam_tender(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
     id += 1
 
     # engine
-    new_coord = [190, 40]
+    new_coord = [220, 40]
     dict[id] = Steam_locomotive(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
-    dict[id].set_new_bar_orgin((1150,29*(len(list_with_engines))))
+    dict_panels[id] = Control_panel(id, (WIN_WIDTH, 29*(len(list_with_engines))))
     list_with_engines.append(id)
     id += 1
 
 
-    return dict, list_with_engines
+    return dict, dict_panels, list_with_engines
 
 def draw_test_platforms(win, offset_x, offset_y, scale):
 

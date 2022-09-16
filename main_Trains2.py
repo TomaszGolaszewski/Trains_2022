@@ -25,7 +25,7 @@ def run():
     DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES = load_from_file_v2()
 
     # make test TRAINS
-    DICT_WITH_CARRIAGES, LIST_WITH_ENGINES = make_test_trains(DICT_WITH_SEGMENTS)
+    DICT_WITH_CARRIAGES, DICT_WITH_PANELS, LIST_WITH_ENGINES = make_test_trains(DICT_WITH_SEGMENTS)
 
     # initialize the pygame
     pygame.init()
@@ -43,10 +43,6 @@ def run():
 
     center_mark = 100 # center mark radius counter
 
-
-    # panels for test
-    bar1 = Control_panel(1, (1150, 600))
-    bar2 = Control_panel(1, (WIN_WIDTH, 629))
 
     # main loop
     running = True
@@ -68,14 +64,19 @@ def run():
             if event.type == pygame.MOUSEBUTTONUP:
                 # 1 - left click
                 if event.button == 1:
+                    # click on carriage
+                    for carriage_id in DICT_WITH_CARRIAGES:
+                        engine_id = DICT_WITH_CARRIAGES[carriage_id].engine_id
+                        if engine_id:
+                            if dist_two_points(DICT_WITH_CARRIAGES[engine_id].coord, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)) < 10:
+                                DICT_WITH_PANELS[engine_id].size = "L"
+
                     # engines control
-                    for engine_id in LIST_WITH_ENGINES:
-                        if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
-                            DICT_WITH_CARRIAGES[engine_id].press_bar(pygame.mouse.get_pos())
-                            # center view
-                            OFFSET_HORIZONTAL = -DICT_WITH_CARRIAGES[engine_id].coord[0] + WIN_WIDTH/2 / SCALE
-                            OFFSET_VERTICAL = -DICT_WITH_CARRIAGES[engine_id].coord[1] + WIN_HEIGHT/2 / SCALE
-                            center_mark = 1
+                    # for engine_id in LIST_WITH_ENGINES:
+                    #     pass
+                    for engine_id in DICT_WITH_PANELS:
+                        DICT_WITH_PANELS[engine_id].press(DICT_WITH_CARRIAGES[engine_id], pygame.mouse.get_pos())
+
 
                     # switches control
                     for switch_id in DICT_WITH_TRACK_SWITCHES:
@@ -207,11 +208,19 @@ def run():
             DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface
-        for bar in LIST_WITH_ENGINES:
-            DICT_WITH_CARRIAGES[bar].draw_bar(WIN)
+        show = 0 # variables to check on which train to centre on
+        engine_to_show = 0
+        for panel_id in DICT_WITH_PANELS:
+            show = DICT_WITH_PANELS[panel_id].draw(WIN, DICT_WITH_CARRIAGES[panel_id], pygame.mouse.get_pos())
+            if show: engine_to_show = show
 
-        bar1.draw(WIN, DICT_WITH_CARRIAGES[bar1.id])
-        bar2.draw(WIN, DICT_WITH_CARRIAGES[bar2.id])
+        # center view
+        if engine_to_show:
+            SCALE = 2
+            OFFSET_HORIZONTAL = -DICT_WITH_CARRIAGES[engine_to_show].coord[0] + WIN_WIDTH/2 / SCALE
+            OFFSET_VERTICAL = -DICT_WITH_CARRIAGES[engine_to_show].coord[1] + WIN_HEIGHT/2 / SCALE
+            center_mark = 1
+
 
         # draw center mark
         if center_mark < 50:
