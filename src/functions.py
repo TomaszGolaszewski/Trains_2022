@@ -154,9 +154,9 @@ def load_from_file_v2():
         # read semaphores
         dict_with_semaphores = {}
         for _ in range(number_of_semaphores):
-            id, x_light, y_light, x_sensor, y_sensor, angle  = [int(i) for i in map_file.readline().split()]
-            # (self, number, light_coord, sensor_coord, angle)
-            dict_with_semaphores[id] = Semaphore(id, [x_light, y_light], [x_sensor, y_sensor], angle, which_segment(dict_with_segments, [x_light, y_light], 1))
+            id, x_light, y_light, x_sensor, y_sensor, angle, mode  = [int(i) for i in map_file.readline().split()]
+            # (self, number, light_coord, sensor_coord, angle, segment, mode)
+            dict_with_semaphores[id] = Semaphore(id, [x_light, y_light], [x_sensor, y_sensor], angle, which_segment(dict_with_segments, [x_light, y_light], 1), mode)
 
         # close file
         map_file.close()

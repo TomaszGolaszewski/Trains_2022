@@ -86,10 +86,8 @@ def run_editor():
                     if add_end_of_segment_on:
                         add_end_of_segment_on = add_end_of_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), DICT_WITH_SEGMENTS)
 
-                    # for engine_id in LIST_WITH_ENGINES:
-                    #     if DICT_WITH_CARRIAGES[engine_id].is_bar_pressed(pygame.mouse.get_pos()):
-                    #         DICT_WITH_CARRIAGES[engine_id].press_bar(pygame.mouse.get_pos())
-                    if not new_segment_on and not new_switch_on:
+
+                    if not new_segment_on and not del_segment_on and not new_switch_on and not del_switch_on and not move_segment_on and not add_end_of_segment_on:
                         for switch_id in DICT_WITH_TRACK_SWITCHES:
                             if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                                 DICT_WITH_TRACK_SWITCHES[switch_id].switch_switch(DICT_WITH_SEGMENTS)
@@ -102,17 +100,45 @@ def run_editor():
 
                     # print(str(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)))
                     print(str(myround_point(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE))))
+
                 # 2 - middle click
+                if event.button == 2:
+                    # define new view center
+                    mouse_pos = pygame.mouse.get_pos()
+                    OFFSET_HORIZONTAL -= (mouse_pos[0] - WIN_WIDTH/2) / SCALE
+                    OFFSET_VERTICAL -= (mouse_pos[1] - WIN_HEIGHT/2) / SCALE
+
                 # 3 - right click
+                if event.button == 3:
+                    # semaphore manual control - on/off
+                    if not new_segment_on and not del_segment_on and not new_switch_on and not del_switch_on and not move_segment_on and not add_end_of_segment_on:
+                        for semaphore_id in DICT_WITH_SEMAPHORES:
+                            if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
+                                DICT_WITH_SEMAPHORES[semaphore_id].change_auto()
+
                 # 4 - scroll up
                 if event.button == 4:
+
+                    old_scale = SCALE
+
                     SCALE += 1
                     if SCALE == 1.5: SCALE = 1
+
+                    if old_scale - SCALE:
+                        OFFSET_HORIZONTAL -= WIN_WIDTH/2 / old_scale - WIN_WIDTH/2 / SCALE
+                        OFFSET_VERTICAL -= WIN_HEIGHT/2 / old_scale - WIN_HEIGHT/2 / SCALE
+
                 # 5 - scroll down
                 if event.button == 5:
+
+                    old_scale = SCALE
+
                     SCALE -= 1
                     if SCALE <= 0: SCALE = 0.5
-                  # pos = pygame.mouse.get_pos()
+
+                    if old_scale - SCALE:
+                        OFFSET_HORIZONTAL -= WIN_WIDTH/2 / old_scale - WIN_WIDTH/2 / SCALE
+                        OFFSET_VERTICAL -= WIN_HEIGHT/2 / old_scale - WIN_HEIGHT/2 / SCALE
 
 
             # keys that can be pressed only ones

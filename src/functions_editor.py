@@ -42,7 +42,7 @@ def save_file_v2(dict_with_segments, dict_with_track_switches, dict_with_semapho
 
         # write semaphores
         map_file.write("semaphores\n")
-        map_file.write("id\tlight_coord_x\tlight_coord_y\tsensor_coord_x\tsensor_coord_y\tangle\n")
+        map_file.write("id\tlight_coord_x\tlight_coord_y\tsensor_coord_x\tsensor_coord_y\tangle\tmode\n")
         for semaphore_id in dict_with_semaphores:
             map_file.write(dict_with_semaphores[semaphore_id].save())
 

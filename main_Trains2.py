@@ -111,7 +111,7 @@ def run():
                 if event.button == 4:
 
                     old_scale = SCALE
-                    mouse_pos = pygame.mouse.get_pos()
+                    # mouse_pos = pygame.mouse.get_pos()
 
                     SCALE += 0.25
                     # if SCALE == 1.5: SCALE = 1

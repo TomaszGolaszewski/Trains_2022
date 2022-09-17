@@ -72,7 +72,7 @@ class Track_switch:
         self.active, self.passive = self.passive, self.active
 
 class Semaphore:
-    def __init__(self, number, light_coord, sensor_coord, angle, segment):
+    def __init__(self, number, light_coord, sensor_coord, angle, segment, mode):
         self.number = number
         self.light_coord = light_coord
         self.sensor_coord = sensor_coord
@@ -87,13 +87,21 @@ class Semaphore:
         self.bottom_light_coord = light_coord
         self.base_coord = move_point_by_angle(light_coord, -5, self.direction)
         self.top_light = "red"
-        self.bottom_light = "red"
+
+        # set mode of semaphore
+        if mode == 1:
+            self.bottom_light = "red"
+        elif mode == 2:
+            self.bottom_light = "off"
 
         self.segment = segment
         self.fore_run_end = light_coord
 
     def save(self):
-        return str(self.number) + "\t" + str(self.light_coord[0]) + "\t" + str(self.light_coord[1]) + "\t" + str(self.sensor_coord[0]) + "\t" + str(self.sensor_coord[1]) + "\t" + str(int(math.degrees(self.direction))) + "\n"
+        if self.bottom_light == "off": mode = 2
+        else: mode = 1
+
+        return str(self.number) + "\t" + str(self.light_coord[0]) + "\t" + str(self.light_coord[1]) + "\t" + str(self.sensor_coord[0]) + "\t" + str(self.sensor_coord[1]) + "\t" + str(int(math.degrees(self.direction))) + "\t" + str(mode) + "\n"
 
     def is_pressed(self, click):
     # check if the light button is pressed
