@@ -325,13 +325,17 @@ class Multiple_unit1_engine(Engine):
         last_carriage = 0
         while next_carriage:
             dick_with_carriages[next_carriage].angle += math.pi
+            if dick_with_carriages[next_carriage].angle > 2*math.pi:
+                dick_with_carriages[next_carriage].angle -= 2*math.pi
             last_carriage = next_carriage
             next_carriage = dick_with_carriages[next_carriage].next_carriage
 
         if last_carriage:
-            self.coord = dick_with_carriages[last_carriage].coord 
+            self.coord = dick_with_carriages[last_carriage].coord
             dick_with_carriages[last_carriage].coord = coord_old_engine
             self.angle += math.pi
+            if self.angle > 2*math.pi:
+                self.angle -= 2*math.pi
 
 
 class EN57_engine(Multiple_unit1_engine):

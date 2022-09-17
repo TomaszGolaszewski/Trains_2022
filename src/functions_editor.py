@@ -90,6 +90,7 @@ def add_segment(coord, temp_list, dict_with_segments):
     temp_list[0] += 1
     if temp_list[0] >= 4:
         temp_list[0] = 0
+        print_instructions()
         return False
     else: return True
 
@@ -118,6 +119,7 @@ def add_switch(coord, temp_list, dict_with_track_switches, dict_with_segments):
     temp_list[0] += 1
     if temp_list[0] >= 4:
         temp_list[0] = 0
+        print_instructions()
         return False
     else: return True
 
@@ -130,6 +132,7 @@ def del_switch(coord, dict_with_track_switches):
         del dict_with_track_switches[switch_id]
         print("Switch " + str(switch_id) + " has been deleted")
 
+    print_instructions()
     return False
 
 def del_segment(coord, dict_with_segments):
@@ -145,6 +148,7 @@ def del_segment(coord, dict_with_segments):
     if segment1 != 9999: add_end_of_segment(point1, dict_with_segments)
     if segment2 != 9999: add_end_of_segment(point2, dict_with_segments)
 
+    print_instructions()
     return False
 
 def move_end_of_segment(coord, temp_list, dict_with_segments):
@@ -165,6 +169,7 @@ def move_end_of_segment(coord, temp_list, dict_with_segments):
     temp_list[0] += 1
     if temp_list[0] >= 2:
         temp_list[0] = 0
+        print_instructions()
         return False
     else: return True
 
@@ -177,4 +182,38 @@ def add_end_of_segment(coord, dict_with_segments):
     elif dist_two_points(dict_with_segments[segment_to_end].point2, coord) < offset:
         dict_with_segments[segment_to_end].segment2 = 9999
 
+    print_instructions()
     return False
+
+def add_semaphore(coord, temp_list, dict_with_semaphores, dict_with_segments):
+    if temp_list[0] == 0:
+        temp_list[1] = myround_point(coord)
+        print("Please select angle")
+    elif temp_list[0] == 1:
+        angle_rad = math.atan2(coord[1]-temp_list[1][1], coord[0]-temp_list[1][0])
+        angle_deg = int(math.degrees(angle_rad)) + 360
+
+        segment = which_segment(dict_with_segments, temp_list[1], 3)
+        new_id = empty_slot(dict_with_semaphores.keys())
+        # (self, number, light_coord, sensor_coord, angle, segment, mode)
+        dict_with_semaphores[new_id] = Semaphore(new_id, temp_list[1], temp_list[1], angle_deg, segment, 1)
+        print("New semaphore " + str(new_id) + " has been added")
+
+    temp_list[0] += 1
+    if temp_list[0] >= 2:
+        temp_list[0] = 0
+        print_instructions()
+        return False
+    else: return True
+
+def print_instructions():
+    print()
+    print("1 - add segment")
+    print("2 - del segment")
+    print("3 - add track switch")
+    print("4 - del track switch")
+    print("5 - add semaphore")
+
+    print("9 - move end of segment")
+    print("(0 - add end of segment)")
+    print()

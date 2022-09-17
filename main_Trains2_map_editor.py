@@ -47,10 +47,14 @@ def run_editor():
     new_switch_on = False
     temp_switch = [0,0,0,0,0]
     del_switch_on = False
+    new_semaphore_on = False
+    temp_semaphore = [0,0]
 
     move_segment_on = False
     temp_move_segment = [0,0]
     add_end_of_segment_on = False
+
+    print_instructions()
 
     # main loop
     running = True
@@ -59,8 +63,8 @@ def run_editor():
         CURRENT_FRAME += 1
         if CURRENT_FRAME == FRAMERATE:
             CURRENT_FRAME = 0
-            print("FPS: %.2f" % CLOCK.get_fps(), end="\t")
-            print("TIME: " + str(pygame.time.get_ticks() // 1000))
+            # print("FPS: %.2f" % CLOCK.get_fps(), end="\t")
+            # print("TIME: " + str(pygame.time.get_ticks() // 1000))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -80,6 +84,8 @@ def run_editor():
                         new_switch_on = add_switch(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_switch, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEGMENTS)
                     if del_switch_on:
                         del_switch_on = del_switch(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), DICT_WITH_TRACK_SWITCHES)
+                    if new_semaphore_on:
+                        new_semaphore_on = add_semaphore(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_semaphore, DICT_WITH_SEMAPHORES, DICT_WITH_SEGMENTS)
 
                     if move_segment_on:
                         move_segment_on = move_end_of_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_move_segment, DICT_WITH_SEGMENTS)
@@ -108,6 +114,9 @@ def run_editor():
                     OFFSET_HORIZONTAL -= (mouse_pos[0] - WIN_WIDTH/2) / SCALE
                     OFFSET_VERTICAL -= (mouse_pos[1] - WIN_HEIGHT/2) / SCALE
 
+                    OFFSET_HORIZONTAL = myround(OFFSET_HORIZONTAL)
+                    OFFSET_VERTICAL = myround(OFFSET_VERTICAL)
+
                 # 3 - right click
                 if event.button == 3:
                     # semaphore manual control - on/off
@@ -128,6 +137,9 @@ def run_editor():
                         OFFSET_HORIZONTAL -= WIN_WIDTH/2 / old_scale - WIN_WIDTH/2 / SCALE
                         OFFSET_VERTICAL -= WIN_HEIGHT/2 / old_scale - WIN_HEIGHT/2 / SCALE
 
+                        OFFSET_HORIZONTAL = myround(OFFSET_HORIZONTAL)
+                        OFFSET_VERTICAL = myround(OFFSET_VERTICAL)
+
                 # 5 - scroll down
                 if event.button == 5:
 
@@ -139,6 +151,9 @@ def run_editor():
                     if old_scale - SCALE:
                         OFFSET_HORIZONTAL -= WIN_WIDTH/2 / old_scale - WIN_WIDTH/2 / SCALE
                         OFFSET_VERTICAL -= WIN_HEIGHT/2 / old_scale - WIN_HEIGHT/2 / SCALE
+
+                        OFFSET_HORIZONTAL = myround(OFFSET_HORIZONTAL)
+                        OFFSET_VERTICAL = myround(OFFSET_VERTICAL)
 
 
             # keys that can be pressed only ones
@@ -168,6 +183,11 @@ def run_editor():
                 if event.key == pygame.K_4:
                     del_switch_on = True
                     print("Please select button to delete")
+                # add semaphore
+                if event.key == pygame.K_5:
+                    new_semaphore_on = True
+                    temp_semaphore = [0,0]
+                    print("Please select semaphore")
 
                 # move end of segment
                 if event.key == pygame.K_9:
