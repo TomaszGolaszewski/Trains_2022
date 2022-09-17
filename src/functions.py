@@ -292,6 +292,8 @@ def draw_test_platforms(win, offset_x, offset_y, scale):
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,664), offset_x, offset_y, scale), 280*scale, 3*scale))
 	# bar(450,684,730,687);
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,684), offset_x, offset_y, scale), 280*scale, 3*scale))
+    # platform no. 4
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,704), offset_x, offset_y, scale), 280*scale, 3*scale))
 
 	# //TomaszLand Wschodni
 	# //bar(1124,140,1127,420);
@@ -303,6 +305,10 @@ def draw_test_platforms(win, offset_x, offset_y, scale):
     # TomaszLand Polnoc
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1314,-730), offset_x, offset_y, scale), 3*scale, 280*scale))
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1334,-730), offset_x, offset_y, scale), 3*scale, 280*scale))
+
+    # TomaszLand Powisle
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1390,704), offset_x, offset_y, scale), 280*scale, 3*scale))
+
 
 def which_segment(dict_with_segments, point, offset):
     for segment_id in dict_with_segments:
