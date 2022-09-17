@@ -51,6 +51,9 @@ class Vehicle:
         # draw angle indicator
         # if not self.r: pygame.draw.line(win, BLACK, move_point(self.coord, offset_x, offset_y, scale), move_point(self.coord, offset_x + 8*math.cos(self.angle), offset_y + 8*math.sin(self.angle), scale), 1)
 
+    def flip(self, dick_with_carriages):
+        self.angle += math.pi
+
     def accelerate(self):
         if self.state != "broken":
             if self.v_target > self.v_current:
@@ -117,12 +120,13 @@ class Vehicle:
                     if dict_with_carriages[carriage_id].engine_id: dict_with_carriages[dict_with_carriages[carriage_id].engine_id].state = "broken"
                 # ...connect carriages
                 else:
-                    dict_with_carriages[carriage_id].engine_id = self.engine_id
-                    self.next_carriage = dict_with_carriages[carriage_id].next_carriage
-                    dict_with_carriages[carriage_id].v_target = self.v_target
-                    dict_with_carriages[carriage_id].v_current = self.v_current
-                    dict_with_carriages[carriage_id].state = self.state
-                    dict_with_carriages[carriage_id].angle = self.angle
+                    if abs(self.v_current) > 0.05: # master is the one which is in motion
+                        dict_with_carriages[carriage_id].engine_id = self.engine_id
+                        self.next_carriage = carriage_id #dict_with_carriages[carriage_id].next_carriage
+                        dict_with_carriages[carriage_id].v_target = self.v_target
+                        dict_with_carriages[carriage_id].v_current = self.v_current
+                        dict_with_carriages[carriage_id].state = self.state
+                        dict_with_carriages[carriage_id].angle = self.angle
 
     def is_collision(self, dict_with_carriages):
     # check whether a collision occurs
@@ -151,76 +155,76 @@ class Engine(Vehicle):
         self.fore_run_end = coord.copy()
         self.engine_id = id
 
-        # control bar
-        self.orgin = [0, 0] # bar orgin
-        self.set_new_bar_orgin(self.orgin)
+        # # control bar
+        # self.orgin = [0, 0] # bar orgin
+        # self.set_new_bar_orgin(self.orgin)
 
-    def set_new_bar_orgin(self, orgin):
-        width = 110
-        height = 30
-        lenght = width - height - 10
-        self.bar = pygame.Rect([*orgin, width, height])
-        self.bar_auto_button = pygame.Rect([*move_point(orgin, 5, 5), 20, 20])
-        self.bar_slower = pygame.Rect([self.bar_auto_button.right+10, self.bar_auto_button.top, lenght/2, 20])
-        self.bar_faster = pygame.Rect([*self.bar_slower.topright, lenght/2, 20])
+    # def set_new_bar_orgin(self, orgin):
+    #     width = 110
+    #     height = 30
+    #     lenght = width - height - 10
+    #     self.bar = pygame.Rect([*orgin, width, height])
+    #     self.bar_auto_button = pygame.Rect([*move_point(orgin, 5, 5), 20, 20])
+    #     self.bar_slower = pygame.Rect([self.bar_auto_button.right+10, self.bar_auto_button.top, lenght/2, 20])
+    #     self.bar_faster = pygame.Rect([*self.bar_slower.topright, lenght/2, 20])
 
-    def draw_bar(self, win):
-        width = self.bar.width
-        height = self.bar.height
-        lenght = width - height - 10
-        orgin = self.bar.topleft
+    # def draw_bar(self, win):
+    #     width = self.bar.width
+    #     height = self.bar.height
+    #     lenght = width - height - 10
+    #     orgin = self.bar.topleft
+    #
+    #     pygame.draw.rect(win, BLACK, self.bar, 0)
+    #     pygame.draw.rect(win, WHITE, self.bar, 1)
+    #
+    #     # pygame.draw.rect(win, YELLOW, self.bar_auto_button, 0)
+    #     # pygame.draw.rect(win, BLUE, self.bar_slower, 0)
+    #     # pygame.draw.rect(win, RED, self.bar_faster, 0)
+    #
+    #     # draw state indicator bottom
+    #     if self.state == "manual": color = BLUE
+    #     elif self.state == "stop": color = GREEN
+    #     elif self.state == "move": color = YELLOW
+    #     else: color = RED
+    #     pygame.draw.circle(win, color, self.bar_auto_button.center, 10, 0)
+    #
+    #     # draw engine indicator
+    #     rotated_image = pygame.transform.rotate(self.imgs, -math.degrees(self.angle))
+    #     new_rect = rotated_image.get_rect(center = self.bar_auto_button.center)
+    #     win.blit(rotated_image, new_rect.topleft)
+    #
+    #     # draw state indicator top
+    #     pygame.draw.circle(win, color, self.bar_auto_button.center, 2, 0)
+    #
+    #     # draw velocity indicator
+    #     # target velocity
+    #     pygame.draw.line(win, GREEN, move_point(orgin, height + lenght/2, 12, 1), move_point(orgin, height + (1+self.v_target/5)*lenght/2, 12, 1), 2)
+    #     # current velocity
+    #     pygame.draw.line(win, RED, move_point(orgin, height + lenght/2, 17, 1), move_point(orgin, height + (1+self.v_current/5)*lenght/2, 17, 1), 2)
+    #     # ruler
+    #     pygame.draw.line(win, WHITE, move_point(orgin, height, height/2, 1), move_point(orgin, height + lenght, height/2, 1)) # ---
+    #     pygame.draw.line(win, WHITE, move_point(orgin, height + lenght/2, 11, 1), move_point(orgin, height + lenght/2, 19, 1)) # -|-
+    #     pygame.draw.line(win, WHITE, move_point(orgin, height, 11, 1), move_point(orgin, 30, 19, 1)) # |--
+    #     pygame.draw.line(win, WHITE, move_point(orgin, height + lenght, 11, 1), move_point(orgin, height + lenght, 19, 1)) # --|
 
-        pygame.draw.rect(win, BLACK, self.bar, 0)
-        pygame.draw.rect(win, WHITE, self.bar, 1)
+    # def is_bar_pressed(self, click):
+    # # check if the bar is pressed
+    #     return self.bar.collidepoint(click)
 
-        # pygame.draw.rect(win, YELLOW, self.bar_auto_button, 0)
-        # pygame.draw.rect(win, BLUE, self.bar_slower, 0)
-        # pygame.draw.rect(win, RED, self.bar_faster, 0)
-
-        # draw state indicator bottom
-        if self.state == "manual": color = BLUE
-        elif self.state == "stop": color = GREEN
-        elif self.state == "move": color = YELLOW
-        else: color = RED
-        pygame.draw.circle(win, color, self.bar_auto_button.center, 10, 0)
-
-        # draw engine indicator
-        rotated_image = pygame.transform.rotate(self.imgs, -math.degrees(self.angle))
-        new_rect = rotated_image.get_rect(center = self.bar_auto_button.center)
-        win.blit(rotated_image, new_rect.topleft)
-
-        # draw state indicator top
-        pygame.draw.circle(win, color, self.bar_auto_button.center, 2, 0)
-
-        # draw velocity indicator
-        # target velocity
-        pygame.draw.line(win, GREEN, move_point(orgin, height + lenght/2, 12, 1), move_point(orgin, height + (1+self.v_target/5)*lenght/2, 12, 1), 2)
-        # current velocity
-        pygame.draw.line(win, RED, move_point(orgin, height + lenght/2, 17, 1), move_point(orgin, height + (1+self.v_current/5)*lenght/2, 17, 1), 2)
-        # ruler
-        pygame.draw.line(win, WHITE, move_point(orgin, height, height/2, 1), move_point(orgin, height + lenght, height/2, 1)) # ---
-        pygame.draw.line(win, WHITE, move_point(orgin, height + lenght/2, 11, 1), move_point(orgin, height + lenght/2, 19, 1)) # -|-
-        pygame.draw.line(win, WHITE, move_point(orgin, height, 11, 1), move_point(orgin, 30, 19, 1)) # |--
-        pygame.draw.line(win, WHITE, move_point(orgin, height + lenght, 11, 1), move_point(orgin, height + lenght, 19, 1)) # --|
-
-    def is_bar_pressed(self, click):
-    # check if the bar is pressed
-        return self.bar.collidepoint(click)
-
-    def press_bar(self, click):
-        if self.bar_auto_button.collidepoint(click):
-            if self.state == "manual": self.state = "stop"
-            elif self.state == "stop" or self.state == "move":
-                self.state = "manual"
-                self.v_target = 0
-        if self.bar_faster.collidepoint(click):
-            if self.state == "manual":
-                self.v_target += 0.5
-                if self.v_target >= Vehicle.v_max: self.v_target = Vehicle.v_max
-        if self.bar_slower.collidepoint(click):
-            if self.state == "manual":
-                self.v_target -= 0.5
-                if self.v_target <= -Vehicle.v_max: self.v_target = -Vehicle.v_max
+    # def press_bar(self, click):
+    #     if self.bar_auto_button.collidepoint(click):
+    #         if self.state == "manual": self.state = "stop"
+    #         elif self.state == "stop" or self.state == "move":
+    #             self.state = "manual"
+    #             self.v_target = 0
+    #     if self.bar_faster.collidepoint(click):
+    #         if self.state == "manual":
+    #             self.v_target += 0.5
+    #             if self.v_target >= Vehicle.v_max: self.v_target = Vehicle.v_max
+    #     if self.bar_slower.collidepoint(click):
+    #         if self.state == "manual":
+    #             self.v_target -= 0.5
+    #             if self.v_target <= -Vehicle.v_max: self.v_target = -Vehicle.v_max
 
     def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
     # function that checkes if the track in front of the train is free
@@ -304,6 +308,8 @@ class Steam_locomotive(Engine):
             if self.smoke[0][1] > 35:
                 self.smoke.pop(0)
 
+    def flip(self, dick_with_carriages):
+        pass
 
 class Multiple_unit1_engine(Engine):
     def __init__(self, id, coord, angle, segment):
@@ -311,6 +317,22 @@ class Multiple_unit1_engine(Engine):
         self.imgs = MULTIPLE_UNIT_1_IMGS[0]
         temp_rect = self.imgs.get_rect()
         self.body_radius = temp_rect.width / 2
+
+    def flip(self, dick_with_carriages):
+        coord_old_engine = self.coord
+
+        next_carriage = self.next_carriage
+        last_carriage = 0
+        while next_carriage:
+            dick_with_carriages[next_carriage].angle += math.pi
+            last_carriage = next_carriage
+            next_carriage = dick_with_carriages[next_carriage].next_carriage
+
+        if last_carriage:
+            self.coord = dick_with_carriages[last_carriage].coord 
+            dick_with_carriages[last_carriage].coord = coord_old_engine
+            self.angle += math.pi
+
 
 class EN57_engine(Multiple_unit1_engine):
     def __init__(self, id, coord, angle, segment):

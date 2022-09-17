@@ -8,7 +8,7 @@ class Control_panel:
     width_S_velocity_box = 25
     width_train_box = 40
     width_button = 29
-    width_M = width_S + width_button*2
+    width_M = width_S + width_button*3
     width_L = 150
     height = 30
 
@@ -31,6 +31,7 @@ class Control_panel:
 
         self.rect_button_1 = pygame.Rect([orgin[0] - Control_panel.width_button, orgin[1], Control_panel.width_button, Control_panel.height]) # rect for first button
         self.rect_button_2 = pygame.Rect([orgin[0] - 2 * Control_panel.width_button, orgin[1], Control_panel.width_button, Control_panel.height]) # rect for second button
+        self.rect_button_3 = pygame.Rect([orgin[0] - 3 * Control_panel.width_button, orgin[1], Control_panel.width_button, Control_panel.height]) # rect for third button
 
         self.orgin_L = (orgin[0] - Control_panel.width_L, orgin[1]) # orgin of large bar
 
@@ -60,13 +61,18 @@ class Control_panel:
         # draw state indicator top
         pygame.draw.circle(win, color, center_point, 2, 0)
 
-    def press(self, engine, click):
+    def press(self, dict_with_carriages, click):
+        engine = dict_with_carriages[self.id]
+
         if self.size == "M" and self.rect_bar_M.collidepoint(click):
-            if self.rect_train_box_M.collidepoint(click) or self.rect_button_2.collidepoint(click):
+            if self.rect_train_box_M.collidepoint(click) or self.rect_button_3.collidepoint(click):
                 if engine.state == "manual": engine.state = "stop"
                 elif engine.state == "stop" or engine.state == "move":
                     engine.state = "manual"
                     engine.v_target = 0
+            if self.rect_button_2.collidepoint(click):
+                if engine.state == "manual":
+                    engine.flip(dict_with_carriages)
             if self.rect_bar_faster_M.collidepoint(click):
                 if engine.state == "manual":
                     engine.v_target += 0.5
@@ -133,9 +139,12 @@ class Control_panel:
         # buttons
         # manual/auto
         if engine.state == "manual":
-            win.blit(MANUAL_MODE, self.rect_button_2.topleft)
+            win.blit(MANUAL_MODE, self.rect_button_3.topleft)
         elif engine.state == "stop" or engine.state == "move":
-            win.blit(AUTO_MODE, self.rect_button_2.topleft)
+            win.blit(AUTO_MODE, self.rect_button_3.topleft)
+
+        # flip engine
+        win.blit(ARROW_FLIP, self.rect_button_2.topleft)
 
         # switch to size L
         win.blit(ARROW_LEFT, self.rect_button_1.topleft)

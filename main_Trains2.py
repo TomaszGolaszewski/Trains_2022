@@ -75,7 +75,7 @@ def run():
                     # for engine_id in LIST_WITH_ENGINES:
                     #     pass
                     for engine_id in DICT_WITH_PANELS:
-                        DICT_WITH_PANELS[engine_id].press(DICT_WITH_CARRIAGES[engine_id], pygame.mouse.get_pos())
+                        DICT_WITH_PANELS[engine_id].press(DICT_WITH_CARRIAGES, pygame.mouse.get_pos())
 
 
                     # switches control
