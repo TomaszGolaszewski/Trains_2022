@@ -191,7 +191,9 @@ def add_semaphore(coord, temp_list, dict_with_semaphores, dict_with_segments):
         print("Please select angle")
     elif temp_list[0] == 1:
         angle_rad = math.atan2(coord[1]-temp_list[1][1], coord[0]-temp_list[1][0])
-        angle_deg = int(math.degrees(angle_rad)) + 360
+        angle_deg = myround(int(math.degrees(angle_rad)), 10)
+        if angle_deg < 0 :
+            angle_deg += 360
 
         segment = which_segment(dict_with_segments, temp_list[1], 3)
         new_id = empty_slot(dict_with_semaphores.keys())

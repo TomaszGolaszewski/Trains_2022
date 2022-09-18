@@ -173,8 +173,8 @@ def make_test_trains(dict_with_segments):
     dict = {}
     dict_panels = {}
     list_with_engines = []
-    number_of_cargo_trains = 4
-    number_of_passenger_trains = 3
+    number_of_cargo_trains = 3
+    number_of_passenger_trains = 2
     number_of_multiple_units_tracks = 3
     number_of_multiple_units_one_track = 3
 
@@ -207,15 +207,18 @@ def make_test_trains(dict_with_segments):
             id += 1
 
     # carriages for passengers
-    for i in range(number_of_passenger_trains+1):
+    for i in range(number_of_passenger_trains):
         offset = random.randint(0,10)
         for j in range(5 + random.randint(0,2)):
             new_coord = [-50 + 32*j + offset , 10+10*i]
-            if i == 3:
-                dict[id] = Carriage_oldtimer(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
-            else:
-                dict[id] = Carriage_passenger(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            dict[id] = Carriage_passenger(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
+
+    # oldtime carriages for passengers
+    for i in range(5):
+        new_coord = [-50 + 32*i, 40]
+        dict[id] = Carriage_oldtimer(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+        id += 1
 
     # multiple units
     for i in range(number_of_multiple_units_tracks):
@@ -265,12 +268,12 @@ def make_test_trains(dict_with_segments):
 
     # steam locomotive
     # tender
-    new_coord = [220 - 27, 40]
+    new_coord = [170 - 27, 40]
     dict[id] = Steam_tender(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
     id += 1
 
     # engine
-    new_coord = [220, 40]
+    new_coord = [170, 40]
     dict[id] = Steam_locomotive(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
     dict_panels[id] = Control_panel(id, (WIN_WIDTH, 29*(len(list_with_engines))))
     list_with_engines.append(id)
@@ -285,7 +288,7 @@ def draw_test_platforms(win, offset_x, offset_y, scale):
 	# bar(24,270,27,550);
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((24,270), offset_x, offset_y, scale), 3*scale, 280*scale))
 
-	# //TomaszLand Centralny
+	# //TomaszLand MAIN STATION
 	# bar(450,644,730,647);
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,644), offset_x, offset_y, scale), 280*scale,3*scale))
 	# bar(450,664,730,667);
@@ -295,7 +298,7 @@ def draw_test_platforms(win, offset_x, offset_y, scale):
     # platform no. 4
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((450,704), offset_x, offset_y, scale), 280*scale, 3*scale))
 
-	# //TomaszLand Wschodni
+	# //TomaszLand OLD WEST
 	# //bar(1124,140,1127,420);
 	# bar(1114,140,1117,420);
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1114,140), offset_x, offset_y, scale), 3*scale, 280*scale))
@@ -308,6 +311,12 @@ def draw_test_platforms(win, offset_x, offset_y, scale):
 
     # TomaszLand Powisle
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1390,704), offset_x, offset_y, scale), 280*scale, 3*scale))
+
+    # TomaszLand WEST STATION
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((2380,654), offset_x, offset_y, scale), 280*scale, 3*scale))
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((2380,674), offset_x, offset_y, scale), 280*scale, 3*scale))
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((2380,694), offset_x, offset_y, scale), 280*scale, 3*scale))
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((2380,714), offset_x, offset_y, scale), 280*scale, 3*scale))
 
 
 def which_segment(dict_with_segments, point, offset):
