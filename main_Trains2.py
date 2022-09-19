@@ -43,6 +43,9 @@ def run():
 
     center_mark = 100 # center mark radius counter
 
+    # for tests only
+    box1 = Control_box((20,410), which_segment(DICT_WITH_SEGMENTS, (20,410), 2), 0)
+    box2 = Control_box((30,410), which_segment(DICT_WITH_SEGMENTS, (30,410), 2), 0)
 
     # main loop
     running = True
@@ -86,6 +89,12 @@ def run():
                     for semaphore_id in DICT_WITH_SEMAPHORES:
                         if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                             DICT_WITH_SEMAPHORES[semaphore_id].change_light()
+
+                    # control boxes
+                    if box1.is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
+                        box1.change_mode()
+                    if box2.is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
+                        box2.change_mode()
 
                     segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 2)
                     if segment and segment != 9999: print(DICT_WITH_SEGMENTS[segment])
@@ -206,6 +215,14 @@ def run():
             if not CURRENT_FRAME % 30: DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES)
             # pygame.draw.line(WIN, YELLOW, move_point(DICT_WITH_SEMAPHORES[semaphore].light_coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_SEMAPHORES[semaphore].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
             DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+
+        # draw control boxes
+        if not (CURRENT_FRAME+15) % 30:
+            box1.run(DICT_WITH_CARRIAGES, DICT_WITH_PANELS)
+            box2.run(DICT_WITH_CARRIAGES, DICT_WITH_PANELS)
+
+        box1.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+        box2.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface
         show = 0 # variables to check on which train to centre on

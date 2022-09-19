@@ -191,3 +191,58 @@ class Semaphore:
 
         self.fore_run_end = ghost_engine.coord.copy()
         self.logic()
+
+class Control_box:
+    def __init__(self, coord, segment, mode):
+        self.coord = coord
+        self.segment = segment
+
+        self.last_engine = 0
+
+        # set mode of control box
+        if mode == 0:
+            self.mode = "off"
+        elif mode == 1:
+            self.mode = "reverse"
+
+    def draw(self, win, offset_x, offset_y, scale):
+        radius = 4
+        border = 0
+        if self.mode == "off":
+            color = WHITE
+            border = 1
+        elif self.mode == "reverse": color = YELLOW
+        else: color = RED
+
+        pygame.draw.rect(win, color, [*move_point(self.coord, offset_x-radius, offset_y-radius, scale), 2*radius*scale, 2*radius*scale], border)
+
+    def is_pressed(self, click):
+    # check if the control box is pressed
+        return dist_two_points(self.coord, click) < 5
+
+    def change_mode(self):
+    # change mode of the box
+        if self.mode == "off": self.mode = "reverse"
+        elif self.mode == "reverse":
+            self.mode = "off"
+            self.current_engine = 0
+            self.last_engine = 0
+
+    def run(self, dict_with_carriages, dict_with_panels):
+    # control the engine
+        if self.mode != "off":
+            self.current_engine = 0
+            # find engine on the same track ac control box
+            for engine_id in dict_with_panels:
+                if dict_with_carriages[engine_id].segment == self.segment:
+                    self.current_engine = engine_id
+                    if self.mode == "reverse":
+                        self.reverse(dict_with_carriages)
+
+            if not self.current_engine: self.last_engine = 0
+
+    def reverse(self, dict_with_carriages):
+        engine = dict_with_carriages[self.current_engine]
+        if engine.state == "stop" and engine.engine_id != self.last_engine:
+            engine.flip(dict_with_carriages)
+            self.last_engine = self.current_engine
