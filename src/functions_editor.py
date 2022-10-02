@@ -220,7 +220,7 @@ def add_semaphore(coord, temp_list, dict_with_semaphores, dict_with_segments):
 
 def add_control_box(coord, dict_with_control_boxes, dict_with_segments):
     new_id = empty_slot(dict_with_control_boxes.keys())
-    dict_with_control_boxes[new_id] = Control_box(new_id, myround_point(coord), which_segment(dict_with_segments, coord, 3), 0)
+    dict_with_control_boxes[new_id] = Control_box(new_id, myround_point(coord), which_segment(dict_with_segments, coord, 3), [], 0)
 
     print_instructions()
     return False
