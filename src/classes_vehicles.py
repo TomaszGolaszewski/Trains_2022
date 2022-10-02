@@ -28,6 +28,7 @@ class Vehicle:
         if self.state == "manual": color = BLUE
         elif self.state == "stop": color = GREEN
         elif self.state == "move": color = YELLOW
+        elif self.state == "wait": color = ORANGE
         else: color = RED
 
         # draw body
@@ -152,79 +153,11 @@ class Engine(Vehicle):
         self.body_radius = temp_rect.width / 2
 
         self.state = "manual"
+        self.wait_time = 0
+        self.full_wait_time = 0
         self.fore_run_end = coord.copy()
         self.engine_id = id
 
-        # # control bar
-        # self.orgin = [0, 0] # bar orgin
-        # self.set_new_bar_orgin(self.orgin)
-
-    # def set_new_bar_orgin(self, orgin):
-    #     width = 110
-    #     height = 30
-    #     lenght = width - height - 10
-    #     self.bar = pygame.Rect([*orgin, width, height])
-    #     self.bar_auto_button = pygame.Rect([*move_point(orgin, 5, 5), 20, 20])
-    #     self.bar_slower = pygame.Rect([self.bar_auto_button.right+10, self.bar_auto_button.top, lenght/2, 20])
-    #     self.bar_faster = pygame.Rect([*self.bar_slower.topright, lenght/2, 20])
-
-    # def draw_bar(self, win):
-    #     width = self.bar.width
-    #     height = self.bar.height
-    #     lenght = width - height - 10
-    #     orgin = self.bar.topleft
-    #
-    #     pygame.draw.rect(win, BLACK, self.bar, 0)
-    #     pygame.draw.rect(win, WHITE, self.bar, 1)
-    #
-    #     # pygame.draw.rect(win, YELLOW, self.bar_auto_button, 0)
-    #     # pygame.draw.rect(win, BLUE, self.bar_slower, 0)
-    #     # pygame.draw.rect(win, RED, self.bar_faster, 0)
-    #
-    #     # draw state indicator bottom
-    #     if self.state == "manual": color = BLUE
-    #     elif self.state == "stop": color = GREEN
-    #     elif self.state == "move": color = YELLOW
-    #     else: color = RED
-    #     pygame.draw.circle(win, color, self.bar_auto_button.center, 10, 0)
-    #
-    #     # draw engine indicator
-    #     rotated_image = pygame.transform.rotate(self.imgs, -math.degrees(self.angle))
-    #     new_rect = rotated_image.get_rect(center = self.bar_auto_button.center)
-    #     win.blit(rotated_image, new_rect.topleft)
-    #
-    #     # draw state indicator top
-    #     pygame.draw.circle(win, color, self.bar_auto_button.center, 2, 0)
-    #
-    #     # draw velocity indicator
-    #     # target velocity
-    #     pygame.draw.line(win, GREEN, move_point(orgin, height + lenght/2, 12, 1), move_point(orgin, height + (1+self.v_target/5)*lenght/2, 12, 1), 2)
-    #     # current velocity
-    #     pygame.draw.line(win, RED, move_point(orgin, height + lenght/2, 17, 1), move_point(orgin, height + (1+self.v_current/5)*lenght/2, 17, 1), 2)
-    #     # ruler
-    #     pygame.draw.line(win, WHITE, move_point(orgin, height, height/2, 1), move_point(orgin, height + lenght, height/2, 1)) # ---
-    #     pygame.draw.line(win, WHITE, move_point(orgin, height + lenght/2, 11, 1), move_point(orgin, height + lenght/2, 19, 1)) # -|-
-    #     pygame.draw.line(win, WHITE, move_point(orgin, height, 11, 1), move_point(orgin, 30, 19, 1)) # |--
-    #     pygame.draw.line(win, WHITE, move_point(orgin, height + lenght, 11, 1), move_point(orgin, height + lenght, 19, 1)) # --|
-
-    # def is_bar_pressed(self, click):
-    # # check if the bar is pressed
-    #     return self.bar.collidepoint(click)
-
-    # def press_bar(self, click):
-    #     if self.bar_auto_button.collidepoint(click):
-    #         if self.state == "manual": self.state = "stop"
-    #         elif self.state == "stop" or self.state == "move":
-    #             self.state = "manual"
-    #             self.v_target = 0
-    #     if self.bar_faster.collidepoint(click):
-    #         if self.state == "manual":
-    #             self.v_target += 0.5
-    #             if self.v_target >= Vehicle.v_max: self.v_target = Vehicle.v_max
-    #     if self.bar_slower.collidepoint(click):
-    #         if self.state == "manual":
-    #             self.v_target -= 0.5
-    #             if self.v_target <= -Vehicle.v_max: self.v_target = -Vehicle.v_max
 
     def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
     # function that checkes if the track in front of the train is free
@@ -267,6 +200,19 @@ class Engine(Vehicle):
             self.v_target -= 1
             if self.v_target <= 0: self.v_target = 0
         self.fore_run_end = ghost_engine.coord.copy()
+
+    def wait(self, wait_time):
+    # set wait time to engine
+        self.wait_time = wait_time
+        self.full_wait_time = wait_time
+        self.state = "wait"
+
+    def countdown(self):
+    # decrease wait time of engine by 1 second
+        if self.wait_time:
+            self.wait_time -= 1
+            if not self.wait_time: self.state = "stop"
+
 
 class Steam_locomotive(Engine):
     def __init__(self, id, coord, angle, segment):

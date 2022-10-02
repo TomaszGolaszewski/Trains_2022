@@ -223,6 +223,7 @@ def run():
         show = 0 # variables to check on which train to centre on
         engine_to_show = 0
         for panel_id in DICT_WITH_PANELS:
+            if not (CURRENT_FRAME+15) % 30: DICT_WITH_CARRIAGES[panel_id].countdown()
             show = DICT_WITH_PANELS[panel_id].draw(WIN, DICT_WITH_CARRIAGES[panel_id], pygame.mouse.get_pos())
             if show: engine_to_show = show
 

@@ -47,11 +47,18 @@ class Control_panel:
             center_point = (0, 0)
 
         # draw state indicator bottom
+        radius = 10
+
         if engine.state == "manual": color = BLUE
         elif engine.state == "stop": color = GREEN
         elif engine.state == "move": color = YELLOW
+        elif engine.state == "wait": color = ORANGE
         else: color = RED
-        pygame.draw.circle(win, color, center_point, 10, 0)
+
+        if engine.state == "wait":
+            temp_rect = pygame.Rect(center_point[0]-radius, center_point[1]-radius, 2*radius, 2*radius)
+            pygame.draw.arc(win, color, temp_rect, math.pi/2, 2*math.pi * engine.wait_time / engine.full_wait_time + math.pi/2, radius)
+        else: pygame.draw.circle(win, color, center_point, radius, 0)
 
         # draw engine indicator
         rotated_image = pygame.transform.rotate(engine.imgs, -math.degrees(engine.angle))

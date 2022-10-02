@@ -207,11 +207,14 @@ class Control_box:
             self.mode = "reverse"
         elif mode == 2:
             self.mode = "wait_10"
+        elif mode == 3:
+            self.mode = "wait_30"
 
     def save(self):
         if self.mode == "off": mode = 0
         elif self.mode == "reverse": mode = 1
         elif self.mode == "wait_10": mode = 2
+        elif self.mode == "wait_30": mode = 3
         else: mode = 0
 
         return str(self.id) + "\t" + str(self.coord[0]) + "\t" + str(self.coord[1]) + "\t" + str(mode) + "\n"
@@ -223,6 +226,8 @@ class Control_box:
             color = WHITE
             border = 1
         elif self.mode == "reverse": color = YELLOW
+        elif self.mode == "wait_10": color = ORANGE
+        elif self.mode == "wait_30": color = RED
         else: color = RED
 
         pygame.draw.rect(win, color, [*move_point(self.coord, offset_x-radius, offset_y-radius, scale), 2*radius*scale, 2*radius*scale], border)
@@ -234,7 +239,9 @@ class Control_box:
     def change_mode(self):
     # change mode of the box
         if self.mode == "off": self.mode = "reverse"
-        elif self.mode == "reverse":
+        elif self.mode == "reverse": self.mode = "wait_10"
+        elif self.mode == "wait_10": self.mode = "wait_30"
+        elif self.mode == "wait_30":
             self.mode = "off"
             self.current_engine = 0
             self.last_engine = 0
@@ -247,8 +254,9 @@ class Control_box:
             for engine_id in dict_with_panels:
                 if dict_with_carriages[engine_id].segment == self.segment:
                     self.current_engine = engine_id
-                    if self.mode == "reverse":
-                        self.reverse(dict_with_carriages)
+                    if self.mode == "reverse": self.reverse(dict_with_carriages)
+                    elif self.mode == "wait_10": self.wait(dict_with_carriages, 10)
+                    elif self.mode == "wait_30": self.wait(dict_with_carriages, 30)
 
             if not self.current_engine: self.last_engine = 0
 
@@ -256,4 +264,10 @@ class Control_box:
         engine = dict_with_carriages[self.current_engine]
         if engine.state == "stop" and engine.engine_id != self.last_engine:
             engine.flip(dict_with_carriages)
+            self.last_engine = self.current_engine
+
+    def wait(self, dict_with_carriages, wait_time):
+        engine = dict_with_carriages[self.current_engine]
+        if engine.state == "stop" and engine.engine_id != self.last_engine:
+            engine.wait(wait_time)
             self.last_engine = self.current_engine
