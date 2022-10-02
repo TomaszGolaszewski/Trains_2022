@@ -193,7 +193,8 @@ class Semaphore:
         self.logic()
 
 class Control_box:
-    def __init__(self, coord, segment, mode):
+    def __init__(self, id, coord, segment, mode):
+        self.id = id
         self.coord = coord
         self.segment = segment
 
@@ -204,6 +205,16 @@ class Control_box:
             self.mode = "off"
         elif mode == 1:
             self.mode = "reverse"
+        elif mode == 2:
+            self.mode = "wait_10"
+
+    def save(self):
+        if self.mode == "off": mode = 0
+        elif self.mode == "reverse": mode = 1
+        elif self.mode == "wait_10": mode = 2
+        else: mode = 0
+
+        return str(self.id) + "\t" + str(self.coord[0]) + "\t" + str(self.coord[1]) + "\t" + str(mode) + "\n"
 
     def draw(self, win, offset_x, offset_y, scale):
         radius = 4

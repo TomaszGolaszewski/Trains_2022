@@ -1,7 +1,7 @@
 from classes_world import *
 from functions import *
 
-def save_file_v2(dict_with_segments, dict_with_track_switches, dict_with_semaphores):
+def save_file_v2(dict_with_segments, dict_with_track_switches, dict_with_semaphores, dict_with_control_boxes):
 # function that save data into file in Trains_2022 standard
 
     # open file
@@ -14,10 +14,11 @@ def save_file_v2(dict_with_segments, dict_with_track_switches, dict_with_semapho
         number_of_segments = len(dict_with_segments)
         number_of_track_switches = len(dict_with_track_switches)
         number_of_semaphores = len(dict_with_semaphores)
+        number_of_control_boxes = len(dict_with_control_boxes)
 
         # write numbers of world building elements
-        map_file.write("number_of_segments\tnumber_of_track_switches\tnumber_of_semaphores\n")
-        map_file.write(str(number_of_segments) + "\t" + str(number_of_track_switches) + "\t" + str(number_of_semaphores) + "\n")
+        map_file.write("number_of_segments\tnumber_of_track_switches\tnumber_of_semaphores\tnumber_of_control_boxes\n")
+        map_file.write(str(number_of_segments) + "\t" + str(number_of_track_switches) + "\t" + str(number_of_semaphores) + "\t" + str(number_of_control_boxes) + "\n")
 
         # write empty line
         map_file.write("\n")
@@ -45,6 +46,15 @@ def save_file_v2(dict_with_segments, dict_with_track_switches, dict_with_semapho
         map_file.write("id\tlight_coord_x\tlight_coord_y\tsensor_coord_x\tsensor_coord_y\tangle\tmode\n")
         for semaphore_id in dict_with_semaphores:
             map_file.write(dict_with_semaphores[semaphore_id].save())
+
+        # write empty line
+        map_file.write("\n")
+
+        # write cnontrol boxes
+        map_file.write("control boxes\n")
+        map_file.write("id\tcoord_x\tcoord_y\tmode\n")
+        for control_box_id in dict_with_control_boxes:
+            map_file.write(dict_with_control_boxes[control_box_id].save())
 
         # close file
         map_file.close()
@@ -208,6 +218,14 @@ def add_semaphore(coord, temp_list, dict_with_semaphores, dict_with_segments):
         return False
     else: return True
 
+def add_control_box(coord, dict_with_control_boxes, dict_with_segments):
+    new_id = empty_slot(dict_with_control_boxes.keys())
+    dict_with_control_boxes[new_id] = Control_box(new_id, myround_point(coord), which_segment(dict_with_segments, coord, 3), 0)
+
+    print_instructions()
+    return False
+
+
 def print_instructions():
     print()
     print("1 - add segment")
@@ -215,6 +233,8 @@ def print_instructions():
     print("3 - add track switch")
     print("4 - del track switch")
     print("5 - add semaphore")
+
+    print("7 - add control box")
 
     print("9 - move end of segment")
     print("(0 - add end of segment)")

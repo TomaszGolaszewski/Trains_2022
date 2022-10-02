@@ -1,5 +1,5 @@
-number_of_segments	number_of_track_switches	number_of_semaphores
-317	69	60
+number_of_segments	number_of_track_switches	number_of_semaphores	number_of_control_boxes
+317	69	60	20
 
 segments
 id	point1_x	point1_y	point2_x	point2_y	segment1	segment2
@@ -455,3 +455,26 @@ id	light_coord_x	light_coord_y	sensor_coord_x	sensor_coord_y	angle	mode
 58	2670	700	2670	700	0	1
 59	2670	710	2670	710	0	1
 60	2670	720	2670	720	0	1
+
+control boxes
+id	coord_x	coord_y	mode
+1	20	410	0
+2	30	410	0
+3	590	640	0
+4	590	650	0
+5	590	660	0
+6	590	670	0
+7	590	680	0
+8	590	690	0
+9	590	700	0
+10	590	710	0
+11	1530	700	0
+12	1530	710	0
+13	2520	650	0
+14	2520	660	0
+15	2520	670	0
+16	2520	680	0
+17	2520	690	0
+18	2520	700	0
+19	2520	710	0
+20	2520	720	1

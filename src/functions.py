@@ -115,10 +115,11 @@ def load_from_file_v2():
         map_file.readline()
 
         # read numbers of world building elements
-        number_of_segments, number_of_track_switches, number_of_semaphores = map_file.readline().split()
+        number_of_segments, number_of_track_switches, number_of_semaphores, number_of_control_boxes = map_file.readline().split()
         number_of_segments = int(number_of_segments)
         number_of_track_switches = int(number_of_track_switches)
         number_of_semaphores = int(number_of_semaphores)
+        number_of_control_boxes = int(number_of_control_boxes)
 
         # read empty line
         map_file.readline()
@@ -158,11 +159,23 @@ def load_from_file_v2():
             # (self, number, light_coord, sensor_coord, angle, segment, mode)
             dict_with_semaphores[id] = Semaphore(id, [x_light, y_light], [x_sensor, y_sensor], angle, which_segment(dict_with_segments, [x_light, y_light], 1), mode)
 
+        # read empty line
+        map_file.readline()
+        map_file.readline()
+        map_file.readline()
+
+        # read control boxes
+        dict_with_control_boxes = {}
+        for _ in range(number_of_control_boxes):
+            id, coord_x, coord_y, mode = [int(i) for i in map_file.readline().split()]
+            # (self, id, coord, segment, mode)
+            dict_with_control_boxes[id] = Control_box(id, [coord_x, coord_y], which_segment(dict_with_segments, [coord_x, coord_y], 2), mode)
+
         # close file
         map_file.close()
 
         # return dictionaries with data
-        return dict_with_segments, dict_with_track_switches, dict_with_semaphores
+        return dict_with_segments, dict_with_track_switches, dict_with_semaphores, dict_with_control_boxes
 
     # except:
     #     print("Map error")

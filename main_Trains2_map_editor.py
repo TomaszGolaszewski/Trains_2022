@@ -23,7 +23,7 @@ def run_editor():
 
     # load data
     # DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES = load_from_file()
-    DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES = load_from_file_v2()
+    DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES, DICT_WITH_CONTROL_BOXES = load_from_file_v2()
 
 
     # initialize the pygame
@@ -49,6 +49,8 @@ def run_editor():
     del_switch_on = False
     new_semaphore_on = False
     temp_semaphore = [0,0]
+
+    new_control_box_on = False
 
     move_segment_on = False
     temp_move_segment = [0,0]
@@ -87,6 +89,9 @@ def run_editor():
                     if new_semaphore_on:
                         new_semaphore_on = add_semaphore(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_semaphore, DICT_WITH_SEMAPHORES, DICT_WITH_SEGMENTS)
 
+                    if new_control_box_on:
+                        new_control_box_on = add_control_box(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), DICT_WITH_CONTROL_BOXES, DICT_WITH_SEGMENTS)
+
                     if move_segment_on:
                         move_segment_on = move_end_of_segment(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), temp_move_segment, DICT_WITH_SEGMENTS)
                     if add_end_of_segment_on:
@@ -97,14 +102,11 @@ def run_editor():
                         for switch_id in DICT_WITH_TRACK_SWITCHES:
                             if DICT_WITH_TRACK_SWITCHES[switch_id].is_switch_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
                                 DICT_WITH_TRACK_SWITCHES[switch_id].switch_switch(DICT_WITH_SEGMENTS)
-                    # for semaphore_id in DICT_WITH_SEMAPHORES:
-                    #     if DICT_WITH_SEMAPHORES[semaphore_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
-                    #         DICT_WITH_SEMAPHORES[semaphore_id].change_light()
+                        # control boxes
+                        for control_box_id in DICT_WITH_CONTROL_BOXES:
+                            if DICT_WITH_CONTROL_BOXES[control_box_id].is_pressed(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)):
+                                DICT_WITH_CONTROL_BOXES[control_box_id].change_mode()
 
-                    # segment = which_segment(DICT_WITH_SEGMENTS, move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 3)
-                    # if segment: print(DICT_WITH_SEGMENTS[segment])
-
-                    # print(str(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)))
                     print(str(myround_point(move_point_back(pygame.mouse.get_pos(), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE))))
 
                 # 2 - middle click
@@ -161,7 +163,7 @@ def run_editor():
                 # manual close
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
                     # save the map
-                    save_file_v2(DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES)
+                    save_file_v2(DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES, DICT_WITH_CONTROL_BOXES)
                     running = False
                     pygame.quit()
                     quit()
@@ -188,6 +190,11 @@ def run_editor():
                     new_semaphore_on = True
                     temp_semaphore = [0,0]
                     print("Please select semaphore")
+
+                # add control box
+                if event.key == pygame.K_7:
+                    new_control_box_on = True
+                    print("Please select control box")
 
                 # move end of segment
                 if event.key == pygame.K_9:
@@ -240,6 +247,10 @@ def run_editor():
         # draw semaphores
         for semaphore in DICT_WITH_SEMAPHORES:
             DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+
+        # draw control boxes
+        for control_box_id in DICT_WITH_CONTROL_BOXES:
+            DICT_WITH_CONTROL_BOXES[control_box_id].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # flip the screen
         pygame.display.update()
