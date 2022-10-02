@@ -216,7 +216,7 @@ def run():
 
         # draw control boxes
         for control_box_id in DICT_WITH_CONTROL_BOXES:
-            if not (CURRENT_FRAME+15) % 30: DICT_WITH_CONTROL_BOXES[control_box_id].run(DICT_WITH_CARRIAGES, DICT_WITH_PANELS)
+            if not (CURRENT_FRAME+15) % 30: DICT_WITH_CONTROL_BOXES[control_box_id].run(DICT_WITH_CARRIAGES, DICT_WITH_SEMAPHORES, DICT_WITH_PANELS)
             DICT_WITH_CONTROL_BOXES[control_box_id].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface

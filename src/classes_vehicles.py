@@ -139,7 +139,7 @@ class Vehicle:
     def change_semaphore(self, dict_with_semaphores):
     # change light of the semaphore to red
         for semaphore_id in dict_with_semaphores:
-            if dict_with_semaphores[semaphore_id].bottom_light == "green" and dict_with_semaphores[semaphore_id].is_pressed(self.coord):
+            if (dict_with_semaphores[semaphore_id].bottom_light == "green" or dict_with_semaphores[semaphore_id].bottom_light == "yellow") and dict_with_semaphores[semaphore_id].is_pressed(self.coord):
                 dict_with_semaphores[semaphore_id].bottom_light = "red"
                 dict_with_semaphores[semaphore_id].logic()
 

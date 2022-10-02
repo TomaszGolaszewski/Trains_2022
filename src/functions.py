@@ -168,8 +168,15 @@ def load_from_file_v2():
         dict_with_control_boxes = {}
         for _ in range(number_of_control_boxes):
             id, coord_x, coord_y, mode = [int(i) for i in map_file.readline().split()]
-            # (self, id, coord, segment, mode)
-            dict_with_control_boxes[id] = Control_box(id, [coord_x, coord_y], which_segment(dict_with_segments, [coord_x, coord_y], 2), mode)
+
+            segment = which_segment(dict_with_segments, [coord_x, coord_y], 2)
+            semaphores = []
+            for semaphore_id in dict_with_semaphores:
+                if dict_with_semaphores[semaphore_id].segment == segment:
+                    semaphores.append(semaphore_id)
+                    
+            # (self, id, coord, segment, semaphores, mode)
+            dict_with_control_boxes[id] = Control_box(id, [coord_x, coord_y], segment, semaphores, mode)
 
         # close file
         map_file.close()

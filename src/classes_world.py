@@ -193,10 +193,11 @@ class Semaphore:
         self.logic()
 
 class Control_box:
-    def __init__(self, id, coord, segment, mode):
+    def __init__(self, id, coord, segment, semaphores, mode):
         self.id = id
         self.coord = coord
         self.segment = segment
+        self.semaphores = semaphores
 
         self.last_engine = 0
 
@@ -246,7 +247,7 @@ class Control_box:
             self.current_engine = 0
             self.last_engine = 0
 
-    def run(self, dict_with_carriages, dict_with_panels):
+    def run(self, dict_with_carriages, dict_with_semaphores, dict_with_panels):
     # control the engine
         if self.mode != "off":
             self.current_engine = 0
@@ -255,8 +256,8 @@ class Control_box:
                 if dict_with_carriages[engine_id].segment == self.segment:
                     self.current_engine = engine_id
                     if self.mode == "reverse": self.reverse(dict_with_carriages)
-                    elif self.mode == "wait_10": self.wait(dict_with_carriages, 10)
-                    elif self.mode == "wait_30": self.wait(dict_with_carriages, 30)
+                    elif self.mode == "wait_10": self.wait(dict_with_carriages, dict_with_semaphores, 10)
+                    elif self.mode == "wait_30": self.wait(dict_with_carriages, dict_with_semaphores, 30)
 
             if not self.current_engine: self.last_engine = 0
 
@@ -266,8 +267,17 @@ class Control_box:
             engine.flip(dict_with_carriages)
             self.last_engine = self.current_engine
 
-    def wait(self, dict_with_carriages, wait_time):
+    def wait(self, dict_with_carriages, dict_with_semaphores, wait_time):
         engine = dict_with_carriages[self.current_engine]
         if engine.state == "stop" and engine.engine_id != self.last_engine:
             engine.wait(wait_time)
+            self.change_semaphore(dict_with_semaphores, engine)
             self.last_engine = self.current_engine
+
+    def change_semaphore(self, dict_with_semaphores, engine):
+        for semaphore_id in self.semaphores:
+            if (dict_with_semaphores[semaphore_id].direction == engine.angle \
+            or dict_with_semaphores[semaphore_id].direction == engine.angle + 2*math.pi \
+            or dict_with_semaphores[semaphore_id].direction + 2*math.pi == engine.angle):
+                dict_with_semaphores[semaphore_id].bottom_light = "yellow"
+                dict_with_semaphores[semaphore_id].logic()
