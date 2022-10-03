@@ -74,9 +74,10 @@ class Control_panel:
         if self.size == "M" and self.rect_bar_M.collidepoint(click):
             if self.rect_train_box_M.collidepoint(click) or self.rect_button_3.collidepoint(click):
                 if engine.state == "manual": engine.state = "stop"
-                elif engine.state == "stop" or engine.state == "move":
+                elif engine.state == "stop" or engine.state == "move" or engine.state == "wait":
                     engine.state = "manual"
                     engine.v_target = 0
+                    engine.wait_time = 0
             if self.rect_button_2.collidepoint(click):
                 if engine.state == "manual":
                     engine.flip(dict_with_carriages)
@@ -94,7 +95,10 @@ class Control_panel:
         if self.size == "S" and self.rect_bar_S.collidepoint(mouse_pos):
             self.size = "M"
             show = True
-        if self.size == "M" and not self.rect_bar_M.collidepoint(mouse_pos): self.size = "S"
+        # if self.size == "M" and not self.rect_bar_M.collidepoint(mouse_pos): self.size = "S"
+        if self.size == "M":
+            if self.rect_bar_M.collidepoint(mouse_pos): show = True
+            else: self.size = "S"
 
         if self.size == "S": self.draw_bar_S(win, engine)
         if self.size == "M": self.draw_bar_M(win, engine)
@@ -147,7 +151,7 @@ class Control_panel:
         # manual/auto
         if engine.state == "manual":
             win.blit(MANUAL_MODE, self.rect_button_3.topleft)
-        elif engine.state == "stop" or engine.state == "move":
+        elif engine.state == "stop" or engine.state == "move" or engine.state == "wait":
             win.blit(AUTO_MODE, self.rect_button_3.topleft)
 
         # flip engine

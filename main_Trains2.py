@@ -41,6 +41,7 @@ def run():
     # WIN_MOD_PARAM = (OFFSET_VERTICAL, OFFSET_HORIZONTAL, SCALE)
 
     center_mark = 100 # center mark radius counter
+    last_engine_to_show = 0 # variables to check on which train to centre on
 
     # for tests only
     # box1 = Control_box((20,410), which_segment(DICT_WITH_SEGMENTS, (20,410), 2), 0)
@@ -229,11 +230,12 @@ def run():
 
         # center view
         if engine_to_show:
-            SCALE = 2
+            SCALE = 1.5
             OFFSET_HORIZONTAL = -DICT_WITH_CARRIAGES[engine_to_show].coord[0] + WIN_WIDTH/2 / SCALE
             OFFSET_VERTICAL = -DICT_WITH_CARRIAGES[engine_to_show].coord[1] + WIN_HEIGHT/2 / SCALE
-            center_mark = 1
-
+            if engine_to_show != last_engine_to_show:
+                center_mark = 1
+                last_engine_to_show = engine_to_show
 
         # draw center mark
         if center_mark < 50:

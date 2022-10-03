@@ -255,7 +255,7 @@ class Control_box:
             for engine_id in dict_with_panels:
                 if dict_with_carriages[engine_id].segment == self.segment:
                     self.current_engine = engine_id
-                    if self.mode == "reverse": self.reverse(dict_with_carriages)
+                    if self.mode == "reverse": self.reverse_and_wait(dict_with_carriages, dict_with_semaphores, 10)
                     elif self.mode == "wait_10": self.wait(dict_with_carriages, dict_with_semaphores, 10)
                     elif self.mode == "wait_30": self.wait(dict_with_carriages, dict_with_semaphores, 30)
 
@@ -265,6 +265,14 @@ class Control_box:
         engine = dict_with_carriages[self.current_engine]
         if engine.state == "stop" and engine.engine_id != self.last_engine:
             engine.flip(dict_with_carriages)
+            self.last_engine = self.current_engine
+
+    def reverse_and_wait(self, dict_with_carriages, dict_with_semaphores, wait_time):
+        engine = dict_with_carriages[self.current_engine]
+        if engine.state == "stop" and engine.engine_id != self.last_engine:
+            engine.flip(dict_with_carriages)
+            engine.wait(wait_time)
+            self.change_semaphore(dict_with_semaphores, engine)
             self.last_engine = self.current_engine
 
     def wait(self, dict_with_carriages, dict_with_semaphores, wait_time):

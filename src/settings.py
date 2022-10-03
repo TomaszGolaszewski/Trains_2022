@@ -20,7 +20,7 @@ LIGHTSLATEGRAY = (119, 136, 153)
 DARKSTEELGRAY = (67,70,75)
 
 # sprites - trains
-ENGINE_IMGS = pygame.image.load(os.path.join("imgs","trains","engine1.png"))
+ENGINE_IMGS = pygame.image.load(os.path.join("imgs","trains","engine1.png")) # .convert()
 CARRIAGE_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","carriage1.png")),
     pygame.image.load(os.path.join("imgs","trains","carriage1_container_green.png")),
