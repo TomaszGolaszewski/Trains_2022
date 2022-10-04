@@ -28,6 +28,8 @@ def run():
     DICT_WITH_CARRIAGES, DICT_WITH_PANELS = make_test_trains(DICT_WITH_SEGMENTS)
     # south-east commuter depot
     make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [2920, 700], math.pi, 1, 3)
+    # north commuter depot
+    make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [1270, -1510], math.pi/2, 2, 3)
 
     # initialize the pygame
     pygame.init()

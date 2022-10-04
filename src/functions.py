@@ -377,6 +377,9 @@ def draw_test_platforms(win, offset_x, offset_y, scale):
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((2380,694), offset_x, offset_y, scale), 280*scale, 3*scale))
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((2380,714), offset_x, offset_y, scale), 280*scale, 3*scale))
 
+    # TomaszLand NORTH DEPOT
+    pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((1324,-1655), offset_x, offset_y, scale), 3*scale, 280*scale))
+
 
 def which_segment(dict_with_segments, point, offset):
     for segment_id in dict_with_segments:
