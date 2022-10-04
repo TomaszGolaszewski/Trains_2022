@@ -24,7 +24,10 @@ def run():
     DICT_WITH_SEGMENTS, DICT_WITH_TRACK_SWITCHES, DICT_WITH_SEMAPHORES, DICT_WITH_CONTROL_BOXES = load_from_file_v2()
 
     # make test TRAINS
-    DICT_WITH_CARRIAGES, DICT_WITH_PANELS, LIST_WITH_ENGINES = make_test_trains(DICT_WITH_SEGMENTS)
+    # DICT_WITH_CARRIAGES, DICT_WITH_PANELS, LIST_WITH_ENGINES = make_test_trains(DICT_WITH_SEGMENTS)
+    DICT_WITH_CARRIAGES, DICT_WITH_PANELS = make_test_trains(DICT_WITH_SEGMENTS)
+    # south-east commuter depot
+    make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [2920, 700], math.pi, 1, 3)
 
     # initialize the pygame
     pygame.init()
@@ -195,7 +198,7 @@ def run():
             DICT_WITH_TRACK_SWITCHES[switch_id].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # check route for auto engines
-        for engine_id in LIST_WITH_ENGINES:
+        for engine_id in DICT_WITH_PANELS: # LIST_WITH_ENGINES:
             DICT_WITH_CARRIAGES[engine_id].accelerate()
             if DICT_WITH_CARRIAGES[engine_id].state == "stop" or DICT_WITH_CARRIAGES[engine_id].state == "move":
                 if not CURRENT_FRAME % 10: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES)

@@ -174,7 +174,7 @@ def load_from_file_v2():
             for semaphore_id in dict_with_semaphores:
                 if dict_with_semaphores[semaphore_id].segment == segment:
                     semaphores.append(semaphore_id)
-                    
+
             # (self, id, coord, segment, semaphores, mode)
             dict_with_control_boxes[id] = Control_box(id, [coord_x, coord_y], segment, semaphores, mode)
 
@@ -195,7 +195,7 @@ def make_test_trains(dict_with_segments):
     list_with_engines = []
     number_of_cargo_trains = 3
     number_of_passenger_trains = 2
-    number_of_multiple_units_tracks = 3
+    number_of_multiple_units_tracks = 1
     number_of_multiple_units_one_track = 3
 
     # engines for cargo
@@ -300,7 +300,46 @@ def make_test_trains(dict_with_segments):
     id += 1
 
 
-    return dict, dict_panels, list_with_engines
+    return dict, dict_panels #, list_with_engines
+
+def make_test_commuter_rail_trains(dict_with_carriages, dict_with_panels, dict_with_segments, orgin, angle, number_of_multiple_units_tracks, number_of_multiple_units_one_track):
+    # make multiple units for commuter rail
+
+    for i in range(number_of_multiple_units_tracks):
+        for j in range(number_of_multiple_units_one_track):
+
+            offset = random.randint(0,10)
+
+            # engines
+            id = empty_slot(dict_with_carriages.keys())
+            # new_coord = [200 - 25*i- 180*j + offset , -10-10*i]
+            new_coord = [orgin[0] + (offset - 180*j ) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j) * math.sin(angle) - 10 * i * math.cos(angle)]
+            dict_with_carriages[id] = Multiple_unit1_engine(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
+            dict_with_panels[id] = Control_panel(id, (WIN_WIDTH, 29*(len(dict_with_panels))))
+            # list_with_engines.append(id)
+            # id += 1
+
+            # carriages 1
+            id = empty_slot(dict_with_carriages.keys())
+            # new_coord = [200 - 32 - 25*i - 180*j + offset , -10-10*i]
+            new_coord = [orgin[0] + (offset - 180*j - 32) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32) * math.sin(angle) - 10 * i * math.cos(angle)]
+            dict_with_carriages[id] = Multiple_unit1_carriage(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
+            # id += 1
+
+            # carriages 2
+            id = empty_slot(dict_with_carriages.keys())
+            # new_coord = [200 - 32*2 - 25*i - 180*j + offset , -10-10*i]
+            new_coord = [orgin[0] + (offset - 180*j  - 32*2) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32*2) * math.sin(angle) - 10 * i * math.cos(angle)]
+            dict_with_carriages[id] = Multiple_unit1_carriage(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
+            # id += 1
+
+            # end
+            id = empty_slot(dict_with_carriages.keys())
+            # new_coord = [200 - 32*3 - 25*i - 180*j + offset , -10-10*i]
+            new_coord = [orgin[0] + (offset - 180*j  - 32*3) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32*3) * math.sin(angle) - 10 * i * math.cos(angle)]
+            dict_with_carriages[id] = Multiple_unit1_end(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
+            # id += 1
+
 
 def draw_test_platforms(win, offset_x, offset_y, scale):
 
