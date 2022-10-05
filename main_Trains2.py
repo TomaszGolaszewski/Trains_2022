@@ -29,7 +29,8 @@ def run():
     # south-east commuter depot
     make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [2920, 700], math.pi, 1, 3)
     # north commuter depot
-    make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [1270, -1510], math.pi/2, 2, 3)
+    # make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [1270, -1510], math.pi/2, 2, 3, 25)
+    make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [1300, -1870], -math.pi/2, 2, 3, 25)
 
     # initialize the pygame
     pygame.init()

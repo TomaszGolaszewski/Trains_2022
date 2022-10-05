@@ -21,6 +21,7 @@ DARKSTEELGRAY = (67,70,75)
 
 # sprites - trains
 ENGINE_IMGS = pygame.image.load(os.path.join("imgs","trains","engine1.png")) # .convert()
+HUSARZ_IMGS = pygame.image.load(os.path.join("imgs","trains","engine2.png"))
 CARRIAGE_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","carriage1.png")),
     pygame.image.load(os.path.join("imgs","trains","carriage1_container_green.png")),
@@ -31,10 +32,18 @@ MULTIPLE_UNIT_1_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","multiple_unit1_engine.png")),
     pygame.image.load(os.path.join("imgs","trains","multiple_unit1_carriage.png")),
     pygame.image.load(os.path.join("imgs","trains","multiple_unit1_end.png"))]
+MULTIPLE_UNIT_2_IMGS = [
+    pygame.image.load(os.path.join("imgs","trains","multiple_unit2_engine.png")),
+    pygame.image.load(os.path.join("imgs","trains","multiple_unit2_carriage.png")),
+    pygame.image.load(os.path.join("imgs","trains","multiple_unit2_end.png"))]
 EN57_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","EN57_engine.png")),
     pygame.image.load(os.path.join("imgs","trains","EN57_carriage.png")),
     pygame.image.load(os.path.join("imgs","trains","EN57_end.png"))]
+EN57_KM_IMGS = [
+    pygame.image.load(os.path.join("imgs","trains","EN57_KM_engine.png")),
+    pygame.image.load(os.path.join("imgs","trains","EN57_KM_carriage.png")),
+    pygame.image.load(os.path.join("imgs","trains","EN57_KM_end.png"))]
 STEAM_LOCOMOTIVE_1_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","steam_locomotive.png")),
     pygame.image.load(os.path.join("imgs","trains","steam_tender.png"))]

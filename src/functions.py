@@ -302,7 +302,7 @@ def make_test_trains(dict_with_segments):
 
     return dict, dict_panels #, list_with_engines
 
-def make_test_commuter_rail_trains(dict_with_carriages, dict_with_panels, dict_with_segments, orgin, angle, number_of_multiple_units_tracks, number_of_multiple_units_one_track):
+def make_test_commuter_rail_trains(dict_with_carriages, dict_with_panels, dict_with_segments, orgin, angle, number_of_multiple_units_tracks, number_of_multiple_units_one_track, shift = 0):
     # make multiple units for commuter rail
 
     for i in range(number_of_multiple_units_tracks):
@@ -313,7 +313,7 @@ def make_test_commuter_rail_trains(dict_with_carriages, dict_with_panels, dict_w
             # engines
             id = empty_slot(dict_with_carriages.keys())
             # new_coord = [200 - 25*i- 180*j + offset , -10-10*i]
-            new_coord = [orgin[0] + (offset - 180*j ) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j) * math.sin(angle) - 10 * i * math.cos(angle)]
+            new_coord = [orgin[0] + (offset - 180*j + shift*i) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j + shift*i) * math.sin(angle) - 10 * i * math.cos(angle)]
             dict_with_carriages[id] = Multiple_unit1_engine(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
             dict_with_panels[id] = Control_panel(id, (WIN_WIDTH, 29*(len(dict_with_panels))))
             # list_with_engines.append(id)
@@ -322,21 +322,21 @@ def make_test_commuter_rail_trains(dict_with_carriages, dict_with_panels, dict_w
             # carriages 1
             id = empty_slot(dict_with_carriages.keys())
             # new_coord = [200 - 32 - 25*i - 180*j + offset , -10-10*i]
-            new_coord = [orgin[0] + (offset - 180*j - 32) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32) * math.sin(angle) - 10 * i * math.cos(angle)]
+            new_coord = [orgin[0] + (offset - 180*j - 32 + shift*i) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32 + shift*i) * math.sin(angle) - 10 * i * math.cos(angle)]
             dict_with_carriages[id] = Multiple_unit1_carriage(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
             # id += 1
 
             # carriages 2
             id = empty_slot(dict_with_carriages.keys())
             # new_coord = [200 - 32*2 - 25*i - 180*j + offset , -10-10*i]
-            new_coord = [orgin[0] + (offset - 180*j  - 32*2) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32*2) * math.sin(angle) - 10 * i * math.cos(angle)]
+            new_coord = [orgin[0] + (offset - 180*j  - 32*2 + shift*i) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32*2 + shift*i) * math.sin(angle) - 10 * i * math.cos(angle)]
             dict_with_carriages[id] = Multiple_unit1_carriage(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
             # id += 1
 
             # end
             id = empty_slot(dict_with_carriages.keys())
             # new_coord = [200 - 32*3 - 25*i - 180*j + offset , -10-10*i]
-            new_coord = [orgin[0] + (offset - 180*j  - 32*3) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32*3) * math.sin(angle) - 10 * i * math.cos(angle)]
+            new_coord = [orgin[0] + (offset - 180*j  - 32*3 + shift*i) * math.cos(angle) + 10 * i * math.sin(angle), orgin[1] + (offset - 180*j  - 32*3 + shift*i) * math.sin(angle) - 10 * i * math.cos(angle)]
             dict_with_carriages[id] = Multiple_unit1_end(id, new_coord, angle, which_segment(dict_with_segments, new_coord, 2))
             # id += 1
 
