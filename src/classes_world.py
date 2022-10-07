@@ -96,6 +96,7 @@ class Semaphore:
 
         self.segment = segment
         self.fore_run_end = light_coord
+        self.request = 0
 
     def save(self):
         if self.bottom_light == "off": mode = 2
@@ -111,7 +112,7 @@ class Semaphore:
     # check state of all lights and decide if it is safe to let the train run
         if self.bottom_light == "off": self.light = self.top_light
         else:
-            if self.top_light == "red" or self.bottom_light == "red":
+            if self.top_light == "red" or self.top_light == "blue" or self.bottom_light == "red":
                 self.light = "red"
             elif self.top_light == "green" and self.bottom_light == "green":
                 self.light = "green"
@@ -134,7 +135,9 @@ class Semaphore:
 
     def draw(self, win, offset_x, offset_y, scale):
         # draw base
-        pygame.draw.circle(win, WHITE, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, 1)
+        radius = 1
+        if self.request: radius = 0
+        pygame.draw.circle(win, WHITE, move_point(self.base_coord, offset_x, offset_y, scale), 4*scale, radius)
         # if self.light == "green": color = GREEN
         # elif self.light == "yellow": color = YELLOW
         # else: color = RED
@@ -153,13 +156,16 @@ class Semaphore:
         # draw top light
         if self.top_light == "green": color = GREEN
         elif self.top_light == "yellow": color = YELLOW
+        elif self.top_light == "blue": color = BLUE
         else: color = RED
         pygame.draw.circle(win, color, move_point(self.top_light_coord, offset_x, offset_y, scale), 4*scale, 0)
 
-    def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
+    def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages, reservation_list):
     # function that checkes if the track in front of the train is free
         max_steps = 200
-        stop = False
+        stop_next_semaphore = False
+        stop_track_occuped = False
+        temp_reservation_list = [] # temporary list with reserved segments - one entry [segment, ghost_engine_pos, ghost_engine_id]
 
         # make test engine
         ghost_engine = Engine(0, self.light_coord.copy(), self.direction, self.segment)
@@ -167,30 +173,52 @@ class Semaphore:
         ghost_engine.v_current = 15
         # run fore-run
         for step in range(max_steps+1):
+            # move ghost engine
             ghost_engine.move(dict_with_segments)
+
+            temp_reservation_list.append([ghost_engine.segment, ghost_engine.coord.copy(), self.request])
+
+            # check colision with carriages
             if ghost_engine.is_collision(dict_with_carriages):
                 self.top_light = "red"
                 break
+            # smart-check of segments' ends and segments' conections' errors
             if ghost_engine.state == "broken":
                 self.top_light = "yellow"
                 break
+            # looking for next semaphore
             for semaphore_id in dict_with_semaphores:
                 if dict_with_semaphores[semaphore_id].segment == ghost_engine.segment \
                 and (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle \
                 or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi \
                 or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) \
                 and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 10:
-                    stop = True
+                    stop_next_semaphore = True
                     break
-            if stop:
+            # checking track reservation
+            if self.request:
+                for entry in reservation_list:
+                    if ghost_engine.segment == entry[0]:
+                        stop_track_occuped = True
+                        break
+            if stop_next_semaphore:
                 self.top_light = "green"
-                break
+                break # break main loop
+            if stop_track_occuped:
+                self.top_light = "blue"
+                break # break main loop
 
         if step == max_steps:
-            self.top_light = "yellow"
+            self.top_light = "yellow" # reached endo of track
+
+        if self.request and not stop_track_occuped:
+            reservation_list = reservation_list + temp_reservation_list # reserve track
+            self.request = 0
 
         self.fore_run_end = ghost_engine.coord.copy()
         self.logic()
+
+        return reservation_list
 
 class Control_box:
     def __init__(self, id, coord, segment, semaphores, mode):

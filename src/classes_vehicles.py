@@ -185,6 +185,7 @@ class Engine(Vehicle):
                 or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi \
                 or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) \
                 and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 10:
+                    dict_with_semaphores[semaphore_id].request = ghost_engine.id
                     stop = True
                     break
             if stop: break

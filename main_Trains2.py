@@ -49,9 +49,7 @@ def run():
     center_mark = 100 # center mark radius counter
     last_engine_to_show = 0 # variables to check on which train to centre on
 
-    # for tests only
-    # box1 = Control_box((20,410), which_segment(DICT_WITH_SEGMENTS, (20,410), 2), 0)
-    # box2 = Control_box((30,410), which_segment(DICT_WITH_SEGMENTS, (30,410), 2), 0)
+    RESERVATION_LIST = [] # list with reserved segments - one entry [segment, ghost_engine_pos, ghost_engine_id]
 
     # main loop
     running = True
@@ -215,9 +213,13 @@ def run():
             DICT_WITH_CARRIAGES[carriage].change_semaphore(DICT_WITH_SEMAPHORES)
             DICT_WITH_CARRIAGES[carriage].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
+        # reset RESERVATION_LIST
+        if not (CURRENT_FRAME) % 30:
+            RESERVATION_LIST = []
+
         # draw semaphores
         for semaphore in DICT_WITH_SEMAPHORES:
-            if not CURRENT_FRAME % 30: DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES)
+            if not CURRENT_FRAME % 30: RESERVATION_LIST = DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES, RESERVATION_LIST)
             # pygame.draw.line(WIN, YELLOW, move_point(DICT_WITH_SEMAPHORES[semaphore].light_coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_SEMAPHORES[semaphore].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
             DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
@@ -247,6 +249,10 @@ def run():
         if center_mark < 50:
             pygame.draw.circle(WIN, RED, [WIN_WIDTH/2, WIN_HEIGHT/2], center_mark, 1)
             center_mark += 4
+
+        # draw RESERVATION_LIST
+        for entry in RESERVATION_LIST:
+            pygame.draw.circle(WIN, WHITE, move_point(entry[1], OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 2*SCALE, 1)
 
         # draw (0, 0)
         # pygame.draw.circle(WIN, RED, move_point((0, 0), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 10*SCALE, 1)
