@@ -198,11 +198,15 @@ def run():
         for switch_id in DICT_WITH_TRACK_SWITCHES:
             DICT_WITH_TRACK_SWITCHES[switch_id].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
+        # reset RESERVATION_LIST
+        if not (CURRENT_FRAME) % 10:
+            RESERVATION_LIST = []
+
         # check route for auto engines
         for engine_id in DICT_WITH_PANELS: # LIST_WITH_ENGINES:
             DICT_WITH_CARRIAGES[engine_id].accelerate()
             if DICT_WITH_CARRIAGES[engine_id].state == "stop" or DICT_WITH_CARRIAGES[engine_id].state == "move":
-                if not CURRENT_FRAME % 10: DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES)
+                if not CURRENT_FRAME % 10: RESERVATION_LIST = DICT_WITH_CARRIAGES[engine_id].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES, RESERVATION_LIST)
                 pygame.draw.line(WIN, RED, move_point(DICT_WITH_CARRIAGES[engine_id].coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_CARRIAGES[engine_id].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
 
         # move and draw trains
@@ -213,13 +217,9 @@ def run():
             DICT_WITH_CARRIAGES[carriage].change_semaphore(DICT_WITH_SEMAPHORES)
             DICT_WITH_CARRIAGES[carriage].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
-        # reset RESERVATION_LIST
-        if not (CURRENT_FRAME) % 30:
-            RESERVATION_LIST = []
-
         # draw semaphores
         for semaphore in DICT_WITH_SEMAPHORES:
-            if not CURRENT_FRAME % 30: RESERVATION_LIST = DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES, RESERVATION_LIST)
+            if not CURRENT_FRAME % 30: DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES, RESERVATION_LIST)
             # pygame.draw.line(WIN, YELLOW, move_point(DICT_WITH_SEMAPHORES[semaphore].light_coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_SEMAPHORES[semaphore].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
             DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 

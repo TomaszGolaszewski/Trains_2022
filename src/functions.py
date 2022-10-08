@@ -196,7 +196,7 @@ def make_test_trains(dict_with_segments):
     number_of_cargo_trains = 3
     number_of_passenger_trains = 2
     number_of_multiple_units_tracks = 1
-    number_of_multiple_units_one_track = 3
+    number_of_multiple_units_one_track = 1
 
     # engines for cargo
     for i in range(number_of_cargo_trains):

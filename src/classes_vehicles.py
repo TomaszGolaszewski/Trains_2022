@@ -142,6 +142,7 @@ class Vehicle:
             if (dict_with_semaphores[semaphore_id].bottom_light == "green" or dict_with_semaphores[semaphore_id].bottom_light == "yellow") and dict_with_semaphores[semaphore_id].is_pressed(self.coord):
                 dict_with_semaphores[semaphore_id].bottom_light = "red"
                 dict_with_semaphores[semaphore_id].logic()
+                dict_with_semaphores[semaphore_id].request = 0
 
 
 class Engine(Vehicle):
@@ -159,12 +160,13 @@ class Engine(Vehicle):
         self.engine_id = id
 
 
-    def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages):
+    def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages, reservation_list):
     # function that checkes if the track in front of the train is free
         max_steps = 70 # 150
         min_v_fore_run = 0.5 # 0.3
         # max_v = 10
         stop = False
+        temp_reservation_list = [] # temporary list with reserved segments - one entry [segment, ghost_engine_pos, ghost_engine_id]
 
         # make test engine
         ghost_engine = Engine(self.id, self.coord.copy(), self.angle, self.segment)
@@ -173,12 +175,22 @@ class Engine(Vehicle):
         else: ghost_engine.v_current = min_v_fore_run
         # run fore-run
         for step in range(max_steps+1):
+            # move ghost engine
             ghost_engine.move(dict_with_segments)
+
+            temp_reservation_list.append([ghost_engine.segment, ghost_engine.coord.copy(), self.id])
+
+            # check colision with carriages
             if ghost_engine.is_collision(dict_with_carriages): break
+
             # if dict_with_segments[ghost_engine.segment].state == "passive": break
+
+            # smart-check of segments' ends and segments' conections' errors
             if ghost_engine.state == "broken": break
+
+            # looking for next semaphore
             for semaphore_id in dict_with_semaphores:
-                # if dict_with_semaphores[semaphore_id].stop_train(ghost_engine.coord):
+
                 if dict_with_semaphores[semaphore_id].segment == ghost_engine.segment \
                 and dict_with_semaphores[semaphore_id].light == "red" \
                 and (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle \
@@ -188,9 +200,14 @@ class Engine(Vehicle):
                     dict_with_semaphores[semaphore_id].request = ghost_engine.id
                     stop = True
                     break
-            if stop: break
 
-        # for semaphore_id in dict_with_semaphores: dict_with_semaphores[semaphore_id].reset()
+            # checking track reservation
+            for entry in reservation_list:
+                if ghost_engine.segment == entry[0]:
+                    stop = True
+                    break
+
+            if stop: break
 
         # if the track is free - accelerate
         if step == max_steps:
@@ -200,7 +217,12 @@ class Engine(Vehicle):
         else:
             self.v_target -= 1
             if self.v_target <= 0: self.v_target = 0
+
         self.fore_run_end = ghost_engine.coord.copy()
+
+        reservation_list = reservation_list + temp_reservation_list # reserve track
+
+        return reservation_list
 
     def wait(self, wait_time):
     # set wait time to engine
