@@ -7,9 +7,9 @@ from functions_math import *
 
 class Vehicle:
     acceleration = 0.02
-    v_max = 5
-    lenght = 18
-    width = 8
+    # v_max = 5
+    # lenght = 18
+    # width = 8
     body_radius = 2 * 10 + 1
 
     def __init__(self, id, coord, angle, segment):
@@ -19,6 +19,8 @@ class Vehicle:
         self.state = "stop"
         self.v_target = 0
         self.v_current = 0
+        self.v_max = 5
+        self.v_max_current = 5
         self.segment = segment
         self.engine_id = 0
         self.next_carriage = 0
@@ -162,8 +164,8 @@ class Engine(Vehicle):
 
     def fore_run(self, dict_with_segments, dict_with_semaphores, dict_with_carriages, reservation_list):
     # function that checkes if the track in front of the train is free
-        max_steps = 70 # 150
-        min_v_fore_run = 0.5 # 0.3
+        max_steps = 100 # 150
+        # min_v_fore_run = 0.5 # 0.3
         # max_v = 10
         stop = False
         temp_reservation_list = [] # temporary list with reserved segments - one entry [segment, ghost_engine_pos, ghost_engine_id]
@@ -171,10 +173,11 @@ class Engine(Vehicle):
         # make test engine
         ghost_engine = Engine(self.id, self.coord.copy(), self.angle, self.segment)
         # set speed of the test engine
-        if self.v_current > min_v_fore_run: ghost_engine.v_current = 2 * self.v_current
-        else: ghost_engine.v_current = min_v_fore_run
+        # if self.v_current > min_v_fore_run: ghost_engine.v_current = 2 * self.v_current
+        # else: ghost_engine.v_current = min_v_fore_run
+        ghost_engine.v_current = 15
         # run fore-run
-        for step in range(max_steps+1):
+        for step in range(max_steps): #+1):
             # move ghost engine
             ghost_engine.move(dict_with_segments)
 
@@ -209,14 +212,29 @@ class Engine(Vehicle):
 
             if stop: break
 
-        # if the track is free - accelerate
-        if step == max_steps:
-            self.v_target += 1
-            if self.v_target >= Vehicle.v_max: self.v_target = Vehicle.v_max
-        # if fore-run encounters a problem - slow down
+        # # if the track is free - accelerate
+        # if step == max_steps:
+        #     self.v_target += 1
+        #     if self.v_target >= Vehicle.v_max: self.v_target = Vehicle.v_max
+        # # if fore-run encounters a problem - slow down
+        # else:
+        #     self.v_target -= 1
+        #     if self.v_target <= 0: self.v_target = 0
+
+        # set speed depending on the length of fore-run
+        if step < 5:
+            self.v_target = 0
+        elif step < 20:
+            self.v_target = 1
+        elif step < 40:
+            self.v_target = 2
+        elif step < 60:
+            self.v_target = 3
+        elif step < 80:
+            self.v_target = 5
         else:
-            self.v_target -= 1
-            if self.v_target <= 0: self.v_target = 0
+            self.v_target = self.v_max_current
+            # self.v_target = step//10 + 1
 
         self.fore_run_end = ghost_engine.coord.copy()
 

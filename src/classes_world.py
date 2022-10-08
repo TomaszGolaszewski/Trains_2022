@@ -202,11 +202,11 @@ class Semaphore:
                     stop_next_semaphore = True
                     break
             # checking track reservation
-            # if self.request:
-            for entry in reservation_list:
-                if ghost_engine.segment == entry[0] and self.request != entry[2]:
-                    stop_track_reserved = True
-                    break
+            if self.request:
+                for entry in reservation_list:
+                    if ghost_engine.segment == entry[0] and self.request != entry[2]:
+                        stop_track_reserved = True
+                        break
             if stop_next_semaphore:
                 self.top_light = "green"
                 break # break main loop

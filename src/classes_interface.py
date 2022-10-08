@@ -84,11 +84,11 @@ class Control_panel:
             if self.rect_bar_faster_M.collidepoint(click):
                 if engine.state == "manual":
                     engine.v_target += 0.5
-                    if engine.v_target >= 5: engine.v_target = 5 # Vehicle.v_max # -----------------------------------------
+                    if engine.v_target >= 5: engine.v_target = engine.v_max_current # Vehicle.v_max # -----------------------------------------
             if self.rect_bar_slower_M.collidepoint(click):
                 if engine.state == "manual":
                     engine.v_target -= 0.5
-                    if engine.v_target <= -5: engine.v_target = -5 # Vehicle.v_max ----------------------------------
+                    if engine.v_target <= -5: engine.v_target = -engine.v_max_current # Vehicle.v_max ----------------------------------
 
     def draw(self, win, engine, mouse_pos):
         show = False # center view on engine
