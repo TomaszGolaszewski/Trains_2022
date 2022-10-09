@@ -202,25 +202,25 @@ class Engine(Vehicle):
             # smart-check of segments' ends and segments' conections' errors
             if ghost_engine.state == "broken": break
 
-            # looking for next semaphore
-            for semaphore_id in dict_with_semaphores:
-
-                if dict_with_semaphores[semaphore_id].segment == ghost_engine.segment \
-                and dict_with_semaphores[semaphore_id].light == "red" \
-                and (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle \
-                or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi \
-                or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) \
-                and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 10:
-                    dict_with_semaphores[semaphore_id].request = ghost_engine.id
-                    stop_iteration = True
-                    break
-
             # checking track reservation
             for entry in reservation_list:
                 if ghost_engine.segment == entry[0]:
                     stop_iteration = True
                     stop_track_occuped = True
                     break
+
+            # looking for next semaphore
+            if not stop_track_occuped:
+                for semaphore_id in dict_with_semaphores:
+                    if dict_with_semaphores[semaphore_id].segment == ghost_engine.segment \
+                    and (dict_with_semaphores[semaphore_id].direction == ghost_engine.angle \
+                    or dict_with_semaphores[semaphore_id].direction == ghost_engine.angle + 2*math.pi \
+                    or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle):
+                        dict_with_semaphores[semaphore_id].request = ghost_engine.id
+                        if dict_with_semaphores[semaphore_id].light == "red" \
+                        and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 10:
+                            stop_iteration = True
+                            break
 
             if stop_iteration: break
 

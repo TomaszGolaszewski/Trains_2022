@@ -229,6 +229,10 @@ def run():
             if not (CURRENT_FRAME+15) % 30: DICT_WITH_CONTROL_BOXES[control_box_id].run(DICT_WITH_CARRIAGES, DICT_WITH_SEMAPHORES, DICT_WITH_PANELS)
             DICT_WITH_CONTROL_BOXES[control_box_id].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
+        # draw RESERVATION_LIST
+        for entry in RESERVATION_LIST:
+            pygame.draw.circle(WIN, WHITE, move_point(entry[1], OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 2*SCALE, 1)
+            
         # draw interface
         show = 0 # variables to check on which train to centre on
         engine_to_show = 0
@@ -250,10 +254,6 @@ def run():
         if center_mark < 50:
             pygame.draw.circle(WIN, RED, [WIN_WIDTH/2, WIN_HEIGHT/2], center_mark, 1)
             center_mark += 4
-
-        # draw RESERVATION_LIST
-        for entry in RESERVATION_LIST:
-            pygame.draw.circle(WIN, WHITE, move_point(entry[1], OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 2*SCALE, 1)
 
         # draw (0, 0)
         # pygame.draw.circle(WIN, RED, move_point((0, 0), OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 10*SCALE, 1)
