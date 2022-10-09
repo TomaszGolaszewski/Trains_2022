@@ -138,6 +138,13 @@ class Vehicle:
                 return True
         return False
 
+    def is_segment_occupied(self, dict_with_carriages):
+    # check whether a potential collision occurs by checking segment occupation
+        for carriage_id in dict_with_carriages:
+            if self.id != carriage_id and self.segment == dict_with_carriages[carriage_id].segment and self.engine_id != dict_with_carriages[carriage_id].engine_id:
+                return True
+        return False
+
     def change_semaphore(self, dict_with_semaphores):
     # change light of the semaphore to red
         for semaphore_id in dict_with_semaphores:
@@ -167,7 +174,8 @@ class Engine(Vehicle):
         max_steps = 100 # 150
         # min_v_fore_run = 0.5 # 0.3
         # max_v = 10
-        stop = False
+        stop_iteration = False
+        stop_track_occuped = False
         temp_reservation_list = [] # temporary list with reserved segments - one entry [segment, ghost_engine_pos, ghost_engine_id]
 
         # make test engine
@@ -184,7 +192,10 @@ class Engine(Vehicle):
             temp_reservation_list.append([ghost_engine.segment, ghost_engine.coord.copy(), self.id])
 
             # check colision with carriages
-            if ghost_engine.is_collision(dict_with_carriages): break
+            # if ghost_engine.is_segment_occupied(dict_with_carriages):
+            if ghost_engine.is_collision(dict_with_carriages):
+                stop_track_occuped = True
+                break
 
             # if dict_with_segments[ghost_engine.segment].state == "passive": break
 
@@ -201,16 +212,17 @@ class Engine(Vehicle):
                 or dict_with_semaphores[semaphore_id].direction + 2*math.pi == ghost_engine.angle) \
                 and dist_two_points(dict_with_semaphores[semaphore_id].light_coord, ghost_engine.coord) < 10:
                     dict_with_semaphores[semaphore_id].request = ghost_engine.id
-                    stop = True
+                    stop_iteration = True
                     break
 
             # checking track reservation
             for entry in reservation_list:
                 if ghost_engine.segment == entry[0]:
-                    stop = True
+                    stop_iteration = True
+                    stop_track_occuped = True
                     break
 
-            if stop: break
+            if stop_iteration: break
 
         # # if the track is free - accelerate
         # if step == max_steps:
@@ -221,24 +233,27 @@ class Engine(Vehicle):
         #     self.v_target -= 1
         #     if self.v_target <= 0: self.v_target = 0
 
-        # set speed depending on the length of fore-run
-        if step < 5:
+        if stop_track_occuped:
             self.v_target = 0
-        elif step < 20:
-            self.v_target = 1
-        elif step < 40:
-            self.v_target = 2
-        elif step < 60:
-            self.v_target = 3
-        elif step < 80:
-            self.v_target = 5
         else:
-            self.v_target = self.v_max_current
-            # self.v_target = step//10 + 1
+        # set speed depending on the length of fore-run
+            if step < 5:
+                self.v_target = 0
+            elif step < 20:
+                self.v_target = 1
+            elif step < 40:
+                self.v_target = 2
+            elif step < 60:
+                self.v_target = 3
+            elif step < 80:
+                self.v_target = 5
+            else:
+                self.v_target = self.v_max_current
+                # self.v_target = step//10 + 1
 
         self.fore_run_end = ghost_engine.coord.copy()
 
-        reservation_list = reservation_list + temp_reservation_list # reserve track
+        if not stop_track_occuped: reservation_list = reservation_list + temp_reservation_list # reserve track
 
         return reservation_list
 

@@ -27,7 +27,7 @@ def run():
     # DICT_WITH_CARRIAGES, DICT_WITH_PANELS, LIST_WITH_ENGINES = make_test_trains(DICT_WITH_SEGMENTS)
     DICT_WITH_CARRIAGES, DICT_WITH_PANELS = make_test_trains(DICT_WITH_SEGMENTS)
     # south-east commuter depot
-    make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [2920, 700], math.pi, 1, 3)
+    make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [2920, 700], math.pi, 2, 3)
     # north commuter depot
     # make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [1270, -1510], math.pi/2, 2, 3, 25)
     make_test_commuter_rail_trains(DICT_WITH_CARRIAGES, DICT_WITH_PANELS, DICT_WITH_SEGMENTS, [1300, -1870], -math.pi/2, 2, 3, 25)
@@ -219,7 +219,8 @@ def run():
 
         # draw semaphores
         for semaphore in DICT_WITH_SEMAPHORES:
-            if not CURRENT_FRAME % 30: DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES, RESERVATION_LIST)
+            # if not (CURRENT_FRAME+5) % 10:
+            if not (CURRENT_FRAME) % 30: DICT_WITH_SEMAPHORES[semaphore].fore_run(DICT_WITH_SEGMENTS, DICT_WITH_SEMAPHORES, DICT_WITH_CARRIAGES, RESERVATION_LIST)
             # pygame.draw.line(WIN, YELLOW, move_point(DICT_WITH_SEMAPHORES[semaphore].light_coord, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), move_point(DICT_WITH_SEMAPHORES[semaphore].fore_run_end, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 1)
             DICT_WITH_SEMAPHORES[semaphore].draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 

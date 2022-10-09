@@ -184,6 +184,7 @@ class Semaphore:
             # temp_reservation_list.append([ghost_engine.segment, ghost_engine.coord.copy(), self.request])
 
             # check colision with carriages
+            # if ghost_engine.is_segment_occupied(dict_with_carriages):
             if ghost_engine.is_collision(dict_with_carriages):
                 self.top_light = "red"
                 stop_track_occuped = True
