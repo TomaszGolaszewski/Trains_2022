@@ -14,6 +14,7 @@ path.append('.\\src')
 from settings import *
 from classes_world import *
 from classes_vehicles import *
+from classes_buildings import *
 from classes_interface import *
 from functions import *
 
@@ -50,6 +51,13 @@ def run():
     last_engine_to_show = 0 # variables to check on which train to centre on
 
     RESERVATION_LIST = [] # list with reserved segments - one entry [segment, ghost_engine_pos, ghost_engine_id]
+
+    # HARBOR4.convert()
+    # HARBOR.set_colorkey(BLACK)
+
+    HARBOR = Harbor([-1200, -330], 0)
+    HARBOR2 = Harbor([0, -330], -math.pi/2)
+    HARBOR3 = Harbor([-700, -600], -3*math.pi/4)
 
     # main loop
     running = True
@@ -232,7 +240,16 @@ def run():
         # draw RESERVATION_LIST
         for entry in RESERVATION_LIST:
             pygame.draw.circle(WIN, WHITE, move_point(entry[1], OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE), 2*SCALE, 1)
-            
+
+        # draw buildings
+        HARBOR.run()
+        HARBOR.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+        HARBOR2.run()
+        HARBOR2.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+        HARBOR3.run()
+        HARBOR3.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+        # draw_test_buildings(WIN, HARBOR4, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+
         # draw interface
         show = 0 # variables to check on which train to centre on
         engine_to_show = 0

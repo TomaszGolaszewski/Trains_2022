@@ -25,7 +25,8 @@ HUSARZ_IMGS = pygame.image.load(os.path.join("imgs","trains","engine2.png"))
 CARRIAGE_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","carriage1.png")),
     pygame.image.load(os.path.join("imgs","trains","carriage1_container_green.png")),
-    pygame.image.load(os.path.join("imgs","trains","carriage1_container_blue.png"))]
+    pygame.image.load(os.path.join("imgs","trains","carriage1_container_blue.png")),
+    pygame.image.load(os.path.join("imgs","trains","carriage1_container_white.png"))]
 CARRIAGE_PASSENGER_IMGS = pygame.image.load(os.path.join("imgs","trains","carriage_passenger.png"))
 CARRIAGE_PASSENGER_OLDTIMER_IMGS = pygame.image.load(os.path.join("imgs","trains","carriage_passenger_oldtimer.png"))
 MULTIPLE_UNIT_1_IMGS = [
@@ -47,6 +48,12 @@ EN57_KM_IMGS = [
 STEAM_LOCOMOTIVE_1_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","steam_locomotive.png")),
     pygame.image.load(os.path.join("imgs","trains","steam_tender.png"))]
+
+# sprites - building
+SHIP_PATH = ["imgs","buildings","container_ship.png"]
+PORTAL_CRANE_PATH = ["imgs","buildings","portal_crane.png"]
+BIG_PORTAL_CRANE_PATH = ["imgs","buildings","big_portal_crane.png"]
+CONTAINERS_PATH = ["imgs","buildings","containers.png"]
 
 # sprites - buttons
 ARROW_LEFT = pygame.image.load(os.path.join("imgs","buttons","arrow_left.png"))

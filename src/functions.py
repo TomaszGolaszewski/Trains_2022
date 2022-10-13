@@ -387,6 +387,9 @@ def draw_test_platforms(win, offset_x, offset_y, scale):
     pygame.draw.rect(win, LIGHTSLATEGRAY, (*move_point((-321,1860), offset_x, offset_y, scale), 3*scale, 280*scale))
 
 
+def draw_test_buildings(win, harbor, offset_x, offset_y, scale):
+    pass
+
 def which_segment(dict_with_segments, point, offset):
     for segment_id in dict_with_segments:
         if dist_to_segment(dict_with_segments[segment_id], point) < offset:
