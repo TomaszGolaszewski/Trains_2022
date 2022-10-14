@@ -54,6 +54,8 @@ SHIP_PATH = ["imgs","buildings","container_ship.png"]
 PORTAL_CRANE_PATH = ["imgs","buildings","portal_crane.png"]
 BIG_PORTAL_CRANE_PATH = ["imgs","buildings","big_portal_crane.png"]
 CONTAINERS_PATH = ["imgs","buildings","containers.png"]
+CONTAINERS2_PATH = ["imgs","buildings","containers2.png"]
+CONTAINERS3_PATH = ["imgs","buildings","containers3.png"]
 
 # sprites - buttons
 ARROW_LEFT = pygame.image.load(os.path.join("imgs","buttons","arrow_left.png"))

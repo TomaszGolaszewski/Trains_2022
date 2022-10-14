@@ -244,10 +244,10 @@ def run():
         # draw buildings
         HARBOR.run()
         HARBOR.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
-        HARBOR2.run()
-        HARBOR2.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
-        HARBOR3.run()
-        HARBOR3.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+        # HARBOR2.run()
+        # HARBOR2.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
+        # HARBOR3.run()
+        # HARBOR3.draw(WIN, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
         # draw_test_buildings(WIN, HARBOR4, OFFSET_HORIZONTAL, OFFSET_VERTICAL, SCALE)
 
         # draw interface
