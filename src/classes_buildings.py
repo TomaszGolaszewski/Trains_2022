@@ -19,12 +19,14 @@ class Harbor:
         for i in range(6):
             for j in range(3):
                 if not ( j == 2 and i >= 4 ):
-                    self.LIST_WITH_MACHINES.append(Containers([orgin[0] - (80 + 50*j)*math.sin(angle) + (100 + 200*i)*math.cos(angle), orgin[1] + (80 + 50*j)*math.cos(angle) + (100 + 200*i)*math.sin(angle)], angle))
+                    self.LIST_WITH_MACHINES.append(Containers([orgin[0] - (100 + 50*j)*math.sin(angle) + (100 + 200*i)*math.cos(angle),
+                                orgin[1] + (100 + 50*j)*math.cos(angle) + (100 + 200*i)*math.sin(angle)], angle))
 
         for i in range(9):
             self.LIST_WITH_MACHINES.append(Big_portal_crane([orgin[0] - 10*math.sin(angle) + 130*i*math.cos(angle), orgin[1] + 10*math.cos(angle) + 130*i*math.sin(angle)], angle))
-        for i in range(4):
-            self.LIST_WITH_MACHINES.append(Portal_crane([orgin[0] - 210*math.sin(angle) + (200 + 100*i)*math.cos(angle), orgin[1] + 210*math.cos(angle) + (200 + 100*i)*math.sin(angle)], angle))
+        for i in range(3):
+            self.LIST_WITH_MACHINES.append(Portal_crane([orgin[0] - 250*math.sin(angle) + (175 + 150*i)*math.cos(angle),
+                        orgin[1] + 250*math.cos(angle) + (175 + 150*i)*math.sin(angle)], angle))
 
 
     def draw(self, win, offset_x, offset_y, scale):
@@ -63,7 +65,7 @@ class Building:
 class Containers(Building):
     def __init__(self, orgin, angle):
 
-        temp = random.randint(0,2)
+        temp = random.randint(0,1) #2)
         if temp == 0: self.path = CONTAINERS_PATH
         elif temp == 1: self.path = CONTAINERS2_PATH
         else: self.path = CONTAINERS3_PATH
@@ -73,7 +75,7 @@ class Containers(Building):
 class Portal_crane(Building):
     path = PORTAL_CRANE_PATH
 
-    track_lenght = 100
+    track_lenght = 150
     track_width = 50
     orgin_to_track = 14
     margin = 20
@@ -93,10 +95,10 @@ class Portal_crane(Building):
     def draw(self, win, offset_x, offset_y, scale):
 
         pygame.draw.line(win, GRAY, move_point(self.orgin, offset_x, offset_y, scale),
-            move_point([self.orgin[0] + self.track_lenght*math.cos(self.angle), self.orgin[1] + self.track_lenght*math.sin(self.angle)], offset_x, offset_y, scale), 1)
+                    move_point([self.orgin[0] + self.track_lenght*math.cos(self.angle), self.orgin[1] + self.track_lenght*math.sin(self.angle)], offset_x, offset_y, scale), 1)
 
         pygame.draw.line(win, GRAY, move_point([self.orgin[0] - self.track_width*math.sin(self.angle), self.orgin[1] + self.track_width*math.cos(self.angle)], offset_x, offset_y, scale),
-            move_point([self.orgin[0] - self.track_width*math.sin(self.angle) + self.track_lenght*math.cos(self.angle), self.orgin[1] + self.track_width*math.cos(self.angle) + self.track_lenght*math.sin(self.angle)], offset_x, offset_y, scale), 1)
+                    move_point([self.orgin[0] - self.track_width*math.sin(self.angle) + self.track_lenght*math.cos(self.angle), self.orgin[1] + self.track_width*math.cos(self.angle) + self.track_lenght*math.sin(self.angle)], offset_x, offset_y, scale), 1)
 
         body = self.rotated_image.get_rect()
         scaled_image = pygame.transform.scale(self.rotated_image, (scale*body.width, scale*body.height))

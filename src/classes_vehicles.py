@@ -204,7 +204,7 @@ class Engine(Vehicle):
 
             # checking track reservation
             for entry in reservation_list:
-                if ghost_engine.segment == entry[0]:
+                if ghost_engine.segment == entry[0]: # and self.id != entry[2]:
                     stop_iteration = True
                     stop_track_occuped = True
                     break

@@ -178,7 +178,8 @@ class Semaphore:
             temp_reservation_list = [] # temporary list with reserved segments - one entry [segment, ghost_engine_pos, ghost_engine_id]
 
             # make test engine
-            ghost_engine = Engine(0, self.light_coord.copy(), self.direction, self.segment)
+            # ghost_engine = Engine(0, self.light_coord.copy(), self.direction, self.segment)
+            ghost_engine = Engine(self.request, self.light_coord.copy(), self.direction, self.segment)
             # set speed of the test engine
             ghost_engine.v_current = 15
 

@@ -55,7 +55,7 @@ def run():
     # HARBOR4.convert()
     # HARBOR.set_colorkey(BLACK)
 
-    HARBOR = Harbor([-1200, -330], 0)
+    HARBOR = Harbor([-1440, -410], 0)
     HARBOR2 = Harbor([0, -330], -math.pi/2)
     HARBOR3 = Harbor([-700, -600], -3*math.pi/4)
 
