@@ -153,6 +153,15 @@ class Vehicle:
                 dict_with_semaphores[semaphore_id].logic()
                 dict_with_semaphores[semaphore_id].request = 0
 
+    def load(self):
+    # load carriage
+        pass
+    def unload(self):
+    # unload carriage
+        pass
+    def load_random(self):
+    # reload carriage
+        pass
 
 class Engine(Vehicle):
     def __init__(self, id, coord, angle, segment):
@@ -352,12 +361,52 @@ class Carriage(Vehicle):
     def __init__(self, id, coord, angle, segment):
         Vehicle.__init__(self, id, coord, angle, segment)
         self.r = 1
+        self.imgs = CARRIAGE_IMGS[0]
+        temp_rect = self.imgs.get_rect()
+        self.body_radius = temp_rect.width / 2
+
+    def accelerate(self):
+        pass
+
+    def load(self):
+    # load carriage
+        pass
+    def unload(self):
+    # unload carriage
+        pass
+    def load_random(self):
+    # reload carriage
+        pass
+
+class Carriage_cargo_container(Carriage):
+    def __init__(self, id, coord, angle, segment):
+        Carriage.__init__(self, id, coord, angle, segment)
+        self.r = 1
         self.imgs = CARRIAGE_IMGS[random.randint(0,2)]
         temp_rect = self.imgs.get_rect()
         self.body_radius = temp_rect.width / 2
 
     def accelerate(self):
         pass
+
+    def load(self):
+    # load carriage
+        temp = random.randint(0,30)
+        if not temp:
+            self.imgs = CARRIAGE_IMGS[random.randint(1,4)]
+
+        pass
+    def unload(self):
+    # unload carriage
+        temp = random.randint(0,30)
+        if not temp:
+            self.imgs = CARRIAGE_IMGS[0]
+
+    def load_random(self):
+    # reload carriage
+        temp = random.randint(0,30)
+        if not temp:
+            self.imgs = CARRIAGE_IMGS[random.randint(0,4)]
 
 class Carriage_passenger(Carriage):
     def __init__(self, id, coord, angle, segment):

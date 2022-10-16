@@ -259,12 +259,24 @@ class Control_box:
             self.mode = "wait_10"
         elif mode == 3:
             self.mode = "wait_30"
+        elif mode == 100:
+            self.mode = "cargo_off"
+        elif mode == 101:
+            self.mode = "cargo_empty"
+        elif mode == 102:
+            self.mode = "cargo_full"
+        elif mode == 103:
+            self.mode = "cargo_random"
 
     def save(self):
         if self.mode == "off": mode = 0
         elif self.mode == "reverse": mode = 1
         elif self.mode == "wait_10": mode = 2
         elif self.mode == "wait_30": mode = 3
+        elif self.mode == "cargo_off": mode = 100
+        elif self.mode == "cargo_empty": mode = 101
+        elif self.mode == "cargo_full": mode = 102
+        elif self.mode == "cargo_random": mode = 103
         else: mode = 0
 
         return str(self.id) + "\t" + str(self.coord[0]) + "\t" + str(self.coord[1]) + "\t" + str(mode) + "\n"
@@ -272,12 +284,15 @@ class Control_box:
     def draw(self, win, offset_x, offset_y, scale):
         radius = 4
         border = 0
-        if self.mode == "off":
+        if self.mode == "off" or self.mode == "cargo_off":
             color = WHITE
             border = 1
         elif self.mode == "reverse": color = YELLOW
         elif self.mode == "wait_10": color = ORANGE
         elif self.mode == "wait_30": color = RED
+        elif self.mode == "cargo_empty": color = SILVER
+        elif self.mode == "cargo_full": color = DARKSTEELGRAY
+        elif self.mode == "cargo_random": color = DEEPPINK
         else: color = RED
 
         pygame.draw.rect(win, color, [*move_point(self.coord, offset_x-radius, offset_y-radius, scale), 2*radius*scale, 2*radius*scale], border)
@@ -296,6 +311,14 @@ class Control_box:
             self.current_engine = 0
             self.last_engine = 0
 
+        if self.mode == "cargo_off": self.mode = "cargo_empty"
+        elif self.mode == "cargo_empty": self.mode = "cargo_full"
+        elif self.mode == "cargo_full": self.mode = "cargo_random"
+        elif self.mode == "cargo_random":
+            self.mode = "cargo_off"
+            self.current_engine = 0
+            self.last_engine = 0
+
     def run(self, dict_with_carriages, dict_with_semaphores, dict_with_panels):
     # control the engine
         if self.mode != "off":
@@ -307,6 +330,9 @@ class Control_box:
                     if self.mode == "reverse": self.reverse_and_wait(dict_with_carriages, dict_with_semaphores, 10)
                     elif self.mode == "wait_10": self.wait(dict_with_carriages, dict_with_semaphores, 10)
                     elif self.mode == "wait_30": self.wait(dict_with_carriages, dict_with_semaphores, 30)
+                    elif self.mode == "cargo_empty": self.unload(dict_with_carriages)
+                    elif self.mode == "cargo_full": self.load(dict_with_carriages)
+                    elif self.mode == "cargo_random": self.load_random(dict_with_carriages)
 
             if not self.current_engine: self.last_engine = 0
 
@@ -330,6 +356,21 @@ class Control_box:
             engine.wait(wait_time)
             self.change_semaphore(dict_with_semaphores, engine)
             self.last_engine = self.current_engine
+
+    def load(self, dict_with_carriages):
+        for carriage_id in dict_with_carriages:
+            if dict_with_carriages[carriage_id].segment == self.segment and dict_with_carriages[carriage_id].state == "stop":
+                dict_with_carriages[carriage_id].load()
+
+    def unload(self, dict_with_carriages):
+        for carriage_id in dict_with_carriages:
+            if dict_with_carriages[carriage_id].segment == self.segment and dict_with_carriages[carriage_id].state == "stop":
+                dict_with_carriages[carriage_id].unload()
+
+    def load_random(self, dict_with_carriages):
+        for carriage_id in dict_with_carriages:
+            if dict_with_carriages[carriage_id].segment == self.segment and dict_with_carriages[carriage_id].state == "stop":
+                dict_with_carriages[carriage_id].load_random()
 
     def change_semaphore(self, dict_with_semaphores, engine):
         for semaphore_id in self.semaphores:

@@ -193,7 +193,7 @@ def make_test_trains(dict_with_segments):
     dict = {}
     dict_panels = {}
     list_with_engines = []
-    number_of_cargo_trains = 3
+    number_of_cargo_trains = 5
     number_of_passenger_trains = 2
     number_of_multiple_units_tracks = 1
     number_of_multiple_units_one_track = 1
@@ -223,7 +223,7 @@ def make_test_trains(dict_with_segments):
             # dict[id] = Carriage(id, [30+22*j, 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
             # dict[id] = Carriage(id, [-80 + 22*j + offset , 10+10*i], 0, which_segment(dict_with_segments, [230, 10+10*i], 2))
             new_coord = [-420 + 25*i + 22*j + offset, -80+10*i]
-            dict[id] = Carriage(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
+            dict[id] = Carriage_cargo_container(id, new_coord, 0, which_segment(dict_with_segments, new_coord, 2))
             id += 1
 
     # carriages for passengers

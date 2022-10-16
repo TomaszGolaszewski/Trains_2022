@@ -14,10 +14,14 @@ BLUE = (0, 0, 255)
 YELLOW = (255,255,0)
 ORANGE = (255, 95, 30)
 WHITE = (255, 255, 255)
+
 SILVER = (192, 192, 192)
 GRAY = (128, 128, 128)
 LIGHTSLATEGRAY = (119, 136, 153)
 DARKSTEELGRAY = (67,70,75)
+
+DEEPPINK = (255,20,147)
+HOTPINK = (255,105,180)
 
 # sprites - trains
 ENGINE_IMGS = pygame.image.load(os.path.join("imgs","trains","engine1.png")) # .convert()
@@ -26,7 +30,8 @@ CARRIAGE_IMGS = [
     pygame.image.load(os.path.join("imgs","trains","carriage1.png")),
     pygame.image.load(os.path.join("imgs","trains","carriage1_container_green.png")),
     pygame.image.load(os.path.join("imgs","trains","carriage1_container_blue.png")),
-    pygame.image.load(os.path.join("imgs","trains","carriage1_container_white.png"))]
+    pygame.image.load(os.path.join("imgs","trains","carriage1_container_white.png")),
+    pygame.image.load(os.path.join("imgs","trains","carriage1_container_red.png"))]
 CARRIAGE_PASSENGER_IMGS = pygame.image.load(os.path.join("imgs","trains","carriage_passenger.png"))
 CARRIAGE_PASSENGER_OLDTIMER_IMGS = pygame.image.load(os.path.join("imgs","trains","carriage_passenger_oldtimer.png"))
 MULTIPLE_UNIT_1_IMGS = [
