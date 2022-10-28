@@ -68,6 +68,7 @@ ARROW_RIGHT = pygame.image.load(os.path.join("imgs","buttons","arrow_right.png")
 ARROW_FLIP = pygame.image.load(os.path.join("imgs","buttons","arrow_flip.png"))
 MANUAL_MODE = pygame.image.load(os.path.join("imgs","buttons","manual_mode.png"))
 AUTO_MODE = pygame.image.load(os.path.join("imgs","buttons","auto_mode.png"))
+PLACEHOLDER = pygame.image.load(os.path.join("imgs","buttons","placeholder.png"))
 
 # sprites - other
 ICON = pygame.image.load(os.path.join("imgs","other","icon.png"))
